@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BadSanta's Helper</title>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -12,6 +14,18 @@
 <body>
     <div id="root"></div>
     <script type="text/babel">
+        const firebaseConfig = {
+          apiKey: "AIzaSyBfscDCuTVN6BKNMC_BHdaHn6_RErFmYVY",
+          authDomain: "badsanta-helper.firebaseapp.com",
+          projectId: "badsanta-helper",
+          storageBucket: "badsanta-helper.firebasestorage.app",
+          messagingSenderId: "416902560841",
+          appId: "1:416902560841:web:71a241fbb540ae46155398"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        
         const { useState, useEffect } = React;
         
         const Search = ({size = 24, className = ""}) => (
@@ -44,10 +58,14 @@
         const ChevronUp = ({size = 24, className = ""}) => (
             <svg width={size} height={size} className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="18 15 12 9 6 15"></polyline></svg>
         );
+        const Clock = ({size = 24, className = ""}) => (
+            <svg width={size} height={size} className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+        );
 
         function GameTracker() {
           const [activeTab, setActiveTab] = useState('players');
           const [players, setPlayers] = useState([]);
+          const [changeHistory, setChangeHistory] = useState([]);
           const [expandedPlayer, setExpandedPlayer] = useState(null);
           const [searchTerm, setSearchTerm] = useState('');
           const [idSearchTerm, setIdSearchTerm] = useState('');
@@ -58,6 +76,9 @@
           const [stateSearchResults, setStateSearchResults] = useState([]);
           const [darkMode, setDarkMode] = useState(true);
           const [compactView, setCompactView] = useState(false);
+          const [username, setUsername] = useState('');
+          const [showUsernamePrompt, setShowUsernamePrompt] = useState(false);
+          const [tempUsername, setTempUsername] = useState('');
           
           const [playerForm, setPlayerForm] = useState({
             name: '', alliance: '', state: '', playerId: '', notes: '', tag: 'none', powerLevel: ''
@@ -78,17 +99,56 @@
           const [presetName, setPresetName] = useState('');
 
           useEffect(() => {
-            const load = (key, setter) => { const val = localStorage.getItem(key); if (val !== null) setter(JSON.parse(val)); };
-            load('gamePlayers', setPlayers);
-            load('totalTroops', setTotalTroops);
-            load('squadComposition', setSquadComposition);
-            load('squadSizes', setSquadSizes);
-            load('squadPresets', setSavedSquadPresets);
-            load('darkMode', setDarkMode);
-            load('compactView', setCompactView);
+            const savedUsername = localStorage.getItem('badsanta_username');
+            const savedDarkMode = localStorage.getItem('darkMode');
+            const savedCompactView = localStorage.getItem('compactView');
+            const savedTotalTroops = localStorage.getItem('totalTroops');
+            const savedSquadComposition = localStorage.getItem('squadComposition');
+            const savedSquadSizes = localStorage.getItem('squadSizes');
+            const savedPresets = localStorage.getItem('squadPresets');
+            
+            if (savedUsername) {
+              setUsername(savedUsername);
+            } else {
+              setShowUsernamePrompt(true);
+            }
+            
+            if (savedDarkMode !== null) setDarkMode(JSON.parse(savedDarkMode));
+            if (savedCompactView !== null) setCompactView(JSON.parse(savedCompactView));
+            if (savedTotalTroops) setTotalTroops(JSON.parse(savedTotalTroops));
+            if (savedSquadComposition) setSquadComposition(JSON.parse(savedSquadComposition));
+            if (savedSquadSizes) setSquadSizes(JSON.parse(savedSquadSizes));
+            if (savedPresets) setSavedSquadPresets(JSON.parse(savedPresets));
           }, []);
 
-          useEffect(() => { localStorage.setItem('gamePlayers', JSON.stringify(players)); }, [players]);
+          useEffect(() => {
+            if (!username) return;
+            
+            const unsubscribePlayers = db.collection('players').onSnapshot(snapshot => {
+              const playerData = [];
+              snapshot.forEach(doc => {
+                playerData.push({ id: doc.id, ...doc.data() });
+              });
+              setPlayers(playerData);
+            });
+
+            const unsubscribeHistory = db.collection('changeHistory')
+              .orderBy('timestamp', 'desc')
+              .limit(100)
+              .onSnapshot(snapshot => {
+                const historyData = [];
+                snapshot.forEach(doc => {
+                  historyData.push({ id: doc.id, ...doc.data() });
+                });
+                setChangeHistory(historyData);
+              });
+
+            return () => {
+              unsubscribePlayers();
+              unsubscribeHistory();
+            };
+          }, [username]);
+
           useEffect(() => { localStorage.setItem('totalTroops', JSON.stringify(totalTroops)); }, [totalTroops]);
           useEffect(() => { localStorage.setItem('squadComposition', JSON.stringify(squadComposition)); }, [squadComposition]);
           useEffect(() => { localStorage.setItem('squadSizes', JSON.stringify(squadSizes)); }, [squadSizes]);
@@ -96,30 +156,89 @@
           useEffect(() => { localStorage.setItem('darkMode', JSON.stringify(darkMode)); }, [darkMode]);
           useEffect(() => { localStorage.setItem('compactView', JSON.stringify(compactView)); }, [compactView]);
 
-          const addOrUpdatePlayer = () => {
-            if (!playerForm.name || !playerForm.playerId) { alert('Please enter at least Name and Player ID'); return; }
-            if (editingPlayer) {
-              setPlayers(players.map(p => p.id === editingPlayer.id ? { ...playerForm, id: p.id, dateAdded: p.dateAdded } : p));
-              setEditingPlayer(null);
-            } else {
-              setPlayers([...players, { ...playerForm, id: Date.now(), dateAdded: new Date().toISOString() }]);
+          const saveUsername = () => {
+            if (!tempUsername.trim()) {
+              alert('Please enter a username');
+              return;
             }
-            setPlayerForm({ name: '', alliance: '', state: '', playerId: '', notes: '', tag: 'none', powerLevel: '' });
-            setShowPlayerForm(false);
+            localStorage.setItem('badsanta_username', tempUsername.trim());
+            setUsername(tempUsername.trim());
+            setShowUsernamePrompt(false);
+          };
+
+          const logChange = async (action, playerName, playerId) => {
+            try {
+              await db.collection('changeHistory').add({
+                action,
+                playerName,
+                playerId,
+                username,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+              });
+            } catch (error) {
+              console.error('Error logging change:', error);
+            }
+          };
+
+          const addOrUpdatePlayer = async () => {
+            if (!playerForm.name || !playerForm.playerId) {
+              alert('Please enter at least Name and Player ID');
+              return;
+            }
+
+            try {
+              if (editingPlayer) {
+                await db.collection('players').doc(editingPlayer.id).update({
+                  ...playerForm,
+                  lastEditedBy: username,
+                  lastEditedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                await logChange('edited', playerForm.name, playerForm.playerId);
+                setEditingPlayer(null);
+              } else {
+                await db.collection('players').add({
+                  ...playerForm,
+                  addedBy: username,
+                  addedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                await logChange('added', playerForm.name, playerForm.playerId);
+              }
+              setPlayerForm({ name: '', alliance: '', state: '', playerId: '', notes: '', tag: 'none', powerLevel: '' });
+              setShowPlayerForm(false);
+            } catch (error) {
+              alert('Error saving player: ' + error.message);
+            }
           };
 
           const editPlayer = (player) => {
             setEditingPlayer(player);
             setPlayerForm({
-              name: player.name, alliance: player.alliance || '', state: player.state || '',
-              playerId: player.playerId, notes: player.notes || '', tag: player.tag || 'none', powerLevel: player.powerLevel || ''
+              name: player.name,
+              alliance: player.alliance || '',
+              state: player.state || '',
+              playerId: player.playerId,
+              notes: player.notes || '',
+              tag: player.tag || 'none',
+              powerLevel: player.powerLevel || ''
             });
             setShowPlayerForm(true);
             setExpandedPlayer(null);
           };
 
           const deletePlayer = (id, event) => { event.stopPropagation(); setDeletingPlayerId(id); };
-          const confirmDelete = () => { setPlayers(players.filter(p => p.id !== deletingPlayerId)); if (expandedPlayer === deletingPlayerId) setExpandedPlayer(null); setDeletingPlayerId(null); };
+          
+          const confirmDelete = async () => {
+            try {
+              const player = players.find(p => p.id === deletingPlayerId);
+              await db.collection('players').doc(deletingPlayerId).delete();
+              await logChange('deleted', player.name, player.playerId);
+              if (expandedPlayer === deletingPlayerId) setExpandedPlayer(null);
+              setDeletingPlayerId(null);
+            } catch (error) {
+              alert('Error deleting player: ' + error.message);
+            }
+          };
+
           const cancelDelete = () => { setDeletingPlayerId(null); };
           const cancelPlayerForm = () => { setShowPlayerForm(false); setEditingPlayer(null); setPlayerForm({ name: '', alliance: '', state: '', playerId: '', notes: '', tag: 'none', powerLevel: '' }); };
 
@@ -134,44 +253,6 @@
             link.click();
             document.body.removeChild(link);
             URL.revokeObjectURL(url);
-          };
-
-          const importPlayers = (event) => {
-            const file = event.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = (e) => {
-              try {
-                const imported = JSON.parse(e.target.result);
-                if (!Array.isArray(imported)) { alert('Invalid file format'); return; }
-                if (players.length === 0) { setPlayers(imported); alert(`Imported ${imported.length} players`); event.target.value = ''; return; }
-                const existingMap = new Map(players.map(p => [`${p.playerId}-${p.name}`, p]));
-                const exactDups = [], nameChanges = [], newPlayers = [];
-                imported.forEach(imp => {
-                  const key = `${imp.playerId}-${imp.name}`;
-                  const sameId = players.find(p => p.playerId === imp.playerId);
-                  if (existingMap.has(key)) exactDups.push(imp);
-                  else if (sameId) nameChanges.push(imp);
-                  else newPlayers.push(imp);
-                });
-                let msg = '';
-                if (exactDups.length) msg += `${exactDups.length} exact duplicate(s) - will skip.\n`;
-                if (nameChanges.length) msg += `${nameChanges.length} name change(s) detected - will add!\n`;
-                if (newPlayers.length) msg += `${newPlayers.length} new player(s).\n`;
-                const toAdd = [...nameChanges, ...newPlayers];
-                if (!toAdd.length) { alert('No new data (all exact duplicates).'); event.target.value = ''; return; }
-                msg += `\nOK to add ${toAdd.length} records, Cancel to replace all.`;
-                if (confirm(msg)) {
-                  setPlayers([...players, ...toAdd]);
-                  alert(`Added:\n• ${newPlayers.length} new\n• ${nameChanges.length} name changes\n• Skipped ${exactDups.length} duplicates`);
-                } else {
-                  setPlayers(imported);
-                  alert(`Replaced with ${imported.length} players.`);
-                }
-                event.target.value = '';
-              } catch (err) { alert('Error reading file.'); console.error(err); }
-            };
-            reader.readAsText(file);
           };
 
           const searchById = () => setIdSearchResults(idSearchTerm.trim() ? players.filter(p => p.playerId === idSearchTerm.trim()) : []);
@@ -271,11 +352,40 @@
 
           const sortedStates = Object.keys(playersByState).sort((a,b) => a === 'No State' ? 1 : b === 'No State' ? -1 : a.localeCompare(b));
 
-          return (
+          const formatTimestamp = (timestamp) => {
+            if (!timestamp) return 'Unknown';
+            const date = timestamp.toDate();
+            const now = new Date();
+            const diff = now - date;
+            const minutes = Math.floor(diff / 60000);
+            const hours = Math.floor(diff / 3600000);
+            const days = Math.floor(diff / 86400000);
+            
+            if (minutes < 1) return 'Just now';
+            if (minutes < 60) return `${minutes}m ago`;
+            if (hours < 24) return `${hours}h ago`;
+            if (days < 7) return `${days}d ago`;
+            return date.toLocaleDateString();
+          };
+            return (
             <div className={`min-h-screen ${darkMode ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-gray-100' : 'bg-gradient-to-br from-gray-100 via-white to-gray-100 text-gray-900'}`}>
+              {showUsernamePrompt && (
+                <div className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 p-4">
+                  <div className={`${darkMode ? 'bg-gradient-to-br from-gray-800 to-gray-900' : 'bg-white'} rounded-lg p-6 max-w-sm w-full border-2 border-blue-600 shadow-2xl`}>
+                    <h3 className="text-lg font-bold mb-3 text-blue-400">👋 Welcome to BadSanta's Helper!</h3>
+                    <p className={`${darkMode ? 'text-gray-300' : 'text-gray-700'} mb-4`}>Enter your username to start tracking players. This will be shown when you add or edit players.</p>
+                    <input type="text" placeholder="Your username" value={tempUsername} onChange={(e) => setTempUsername(e.target.value)} onKeyPress={(e) => e.key === 'Enter' && saveUsername()} className={`w-full mb-3 p-2 ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-900'} border rounded`} autoFocus />
+                    <button onClick={saveUsername} className="w-full py-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 rounded font-medium text-white">Continue</button>
+                  </div>
+                </div>
+              )}
+
               <div className={`${darkMode ? 'bg-gradient-to-r from-red-900 via-red-800 to-red-900 border-b border-red-700' : 'bg-gradient-to-r from-red-600 via-red-500 to-red-600 border-b border-red-400'} p-4 shadow-lg`}>
                 <div className="flex justify-between items-center">
-                  <h1 className="text-3xl font-bold text-white drop-shadow-lg">🎅 BadSanta's Helper 🎄</h1>
+                  <div>
+                    <h1 className="text-3xl font-bold text-white drop-shadow-lg">🎅 BadSanta's Helper 🎄</h1>
+                    {username && <p className="text-xs text-white/70 mt-1">Logged in as: {username}</p>}
+                  </div>
                   <div className="flex gap-2">
                     <button onClick={() => setDarkMode(!darkMode)} className={`px-3 py-1 rounded-lg text-sm font-medium ${darkMode ? 'bg-yellow-500 text-gray-900' : 'bg-gray-800 text-white'}`}>{darkMode ? '☀️' : '🌙'}</button>
                     <button onClick={() => setCompactView(!compactView)} className={`px-3 py-1 rounded-lg text-sm font-medium ${darkMode ? 'bg-blue-600 text-white' : 'bg-blue-500 text-white'}`}>{compactView ? '📋' : '📱'}</button>
@@ -285,6 +395,7 @@
 
               <div className={`flex ${darkMode ? 'bg-gray-800 border-b border-gray-700' : 'bg-white border-b border-gray-300'} shadow-md`}>
                 <button onClick={() => setActiveTab('players')} className={`flex-1 py-4 px-4 font-medium transition-all ${activeTab === 'players' ? 'bg-gradient-to-b from-blue-600 to-blue-700 text-white border-b-2 border-blue-400 shadow-lg' : `${darkMode ? 'text-gray-400 hover:bg-gray-700' : 'text-gray-600 hover:bg-gray-100'}`}`}><Users className="inline mr-2" size={20} />Players</button>
+                <button onClick={() => setActiveTab('history')} className={`flex-1 py-4 px-4 font-medium transition-all ${activeTab === 'history' ? 'bg-gradient-to-b from-blue-600 to-blue-700 text-white border-b-2 border-blue-400 shadow-lg' : `${darkMode ? 'text-gray-400 hover:bg-gray-700' : 'text-gray-600 hover:bg-gray-100'}`}`}><Clock className="inline mr-2" size={20} />History</button>
                 <button onClick={() => setActiveTab('squads')} className={`flex-1 py-4 px-4 font-medium transition-all ${activeTab === 'squads' ? 'bg-gradient-to-b from-blue-600 to-blue-700 text-white border-b-2 border-blue-400 shadow-lg' : `${darkMode ? 'text-gray-400 hover:bg-gray-700' : 'text-gray-600 hover:bg-gray-100'}`}`}><Shield className="inline mr-2" size={20} />Squads</button>
               </div>
 
@@ -304,13 +415,17 @@
                       </div>
                     )}
 
+                    <div className={`mb-4 p-3 ${darkMode ? 'bg-blue-900/20 border-blue-700' : 'bg-blue-50 border-blue-300'} rounded-lg border`}>
+                      <p className={`text-sm ${darkMode ? 'text-blue-300' : 'text-blue-700'}`}>🌐 <strong>Shared Database:</strong> All players are synced in real-time with everyone using this app!</p>
+                    </div>
+
                     <div className={`mb-4 p-4 ${darkMode ? 'bg-gradient-to-br from-gray-800 to-gray-850 border-gray-700' : 'bg-white border-gray-300'} rounded-lg border shadow-lg`}>
                       <h3 className="font-bold mb-3 flex items-center"><Search className={`mr-2 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`} size={20} />Quick Search</h3>
                       <div className="mb-3"><label className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'} mb-1 block`}>By Player ID</label><div className="flex gap-2"><input type="text" placeholder="Enter Player ID..." value={idSearchTerm} onChange={(e) => setIdSearchTerm(e.target.value)} onKeyPress={(e) => e.key === 'Enter' && searchById()} className={`flex-1 px-4 py-2 ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-900'} border rounded-lg`} /><button onClick={searchById} className="px-6 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg font-medium text-white">Search</button></div></div>
                       <div className="mb-3"><label className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'} mb-1 block`}>By Alliance</label><div className="flex gap-2"><input type="text" placeholder="Enter Alliance..." value={allianceSearchTerm} onChange={(e) => setAllianceSearchTerm(e.target.value)} onKeyPress={(e) => e.key === 'Enter' && searchByAlliance()} className={`flex-1 px-4 py-2 ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-900'} border rounded-lg`} /><button onClick={searchByAlliance} className="px-6 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg font-medium text-white">Search</button></div></div>
                       <div><label className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'} mb-1 block`}>By State</label><div className="flex gap-2"><input type="text" placeholder="Enter State..." value={stateSearchTerm} onChange={(e) => setStateSearchTerm(e.target.value)} onKeyPress={(e) => e.key === 'Enter' && searchByState()} className={`flex-1 px-4 py-2 ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-900'} border rounded-lg`} /><button onClick={searchByState} className="px-6 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg font-medium text-white">Search</button></div></div>
                       
-                      {idSearchResults.length > 0 && (<div className="mt-3 p-3 bg-gradient-to-br from-green-900/40 to-green-800/30 border-2 border-green-600 rounded-lg shadow-lg"><p className="font-bold text-green-400 mb-2 flex items-center">✓ Found {idSearchResults.length} record{idSearchResults.length > 1 ? 's' : ''} for ID: {idSearchTerm}</p>{idSearchResults.map((p, i) => (<div key={p.id} className="text-sm text-gray-300 mb-2"><p className="font-bold">{i + 1}. {p.name}</p>{p.alliance && <p className="ml-3">Alliance: {p.alliance}</p>}{p.state && <p className="ml-3">State: {p.state}</p>}{p.notes && <p className="ml-3">Notes: {p.notes}</p>}<p className="ml-3 text-gray-500 text-xs">Added: {new Date(p.dateAdded).toLocaleDateString()}</p></div>))}{idSearchResults.length > 1 && <p className="text-yellow-400 text-sm mt-2">⚠️ This player changed names {idSearchResults.length} times!</p>}</div>)}
+                      {idSearchResults.length > 0 && (<div className="mt-3 p-3 bg-gradient-to-br from-green-900/40 to-green-800/30 border-2 border-green-600 rounded-lg shadow-lg"><p className="font-bold text-green-400 mb-2 flex items-center">✓ Found {idSearchResults.length} record{idSearchResults.length > 1 ? 's' : ''} for ID: {idSearchTerm}</p>{idSearchResults.map((p, i) => (<div key={p.id} className="text-sm text-gray-300 mb-2"><p className="font-bold">{i + 1}. {p.name}</p>{p.alliance && <p className="ml-3">Alliance: {p.alliance}</p>}{p.state && <p className="ml-3">State: {p.state}</p>}{p.notes && <p className="ml-3">Notes: {p.notes}</p>}<p className="ml-3 text-gray-500 text-xs">Added by: {p.addedBy || 'Unknown'}</p></div>))}{idSearchResults.length > 1 && <p className="text-yellow-400 text-sm mt-2">⚠️ This player changed names {idSearchResults.length} times!</p>}</div>)}
                       {idSearchTerm && !idSearchResults.length && <div className={`mt-3 p-3 ${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-gray-200 border-gray-300'} border rounded-lg`}><p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} text-sm`}>No player with ID: {idSearchTerm}</p></div>}
                       {allianceSearchResults.length > 0 && (<div className="mt-3 p-3 bg-gradient-to-br from-purple-900/40 to-purple-800/30 border-2 border-purple-600 rounded-lg shadow-lg"><p className="font-bold text-purple-400 mb-2 flex items-center">👥 Found {allianceSearchResults.length} in "{allianceSearchTerm}"</p>{allianceSearchResults.map((p, i) => (<div key={p.id} className="text-sm text-gray-300 mb-2 pb-2 border-b border-purple-800 last:border-0"><p className="font-bold">{i + 1}. {p.name}</p><p className="ml-3 text-xs">ID: {p.playerId}</p>{p.state && <p className="ml-3 text-xs">State: {p.state}</p>}</div>))}</div>)}
                       {allianceSearchTerm && !allianceSearchResults.length && <div className={`mt-3 p-3 ${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-gray-200 border-gray-300'} border rounded-lg`}><p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} text-sm`}>No players in alliance: {allianceSearchTerm}</p></div>}
@@ -320,19 +435,41 @@
 
                     <div className="mb-4"><div className="relative"><Search className={`absolute left-3 top-3 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`} size={20} /><input type="text" placeholder="Search players..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className={`w-full pl-10 pr-4 py-2 ${darkMode ? 'bg-gray-800 border-gray-700 text-white' : 'bg-white border-gray-300 text-gray-900'} border rounded-lg`} /></div></div>
 
-                    <div className="mb-4 flex gap-2">
-                      <button onClick={exportPlayers} className="flex-1 py-2 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 rounded-lg font-medium flex items-center justify-center shadow-lg text-white">📥 Export</button>
-                      <label className="flex-1 py-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 rounded-lg font-medium flex items-center justify-center shadow-lg cursor-pointer text-white">📤 Import<input type="file" accept=".json" onChange={importPlayers} className="hidden" /></label>
-                    </div>
+                    <div className="mb-4"><button onClick={exportPlayers} className="w-full py-2 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 rounded-lg font-medium flex items-center justify-center shadow-lg text-white">📥 Export Backup</button></div>
 
                     {!showPlayerForm && <button onClick={() => setShowPlayerForm(true)} className="w-full mb-4 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 rounded-lg font-medium flex items-center justify-center shadow-lg text-white"><Plus size={20} className="mr-2" />Add Player</button>}
 
                     {showPlayerForm && (<div className={`mb-4 p-4 ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-300'} rounded-lg border`}><div className="flex justify-between items-center mb-3"><h3 className="font-bold">{editingPlayer ? 'Edit Player' : 'Add New Player'}</h3><button onClick={cancelPlayerForm}><X size={20} /></button></div><input type="text" placeholder="Player Name *" value={playerForm.name} onChange={(e) => setPlayerForm({ ...playerForm, name: e.target.value })} className={`w-full mb-2 p-2 ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-900'} border rounded`} /><input type="text" placeholder="Player ID *" value={playerForm.playerId} onChange={(e) => setPlayerForm({ ...playerForm, playerId: e.target.value })} className={`w-full mb-2 p-2 ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-900'} border rounded`} /><select value={playerForm.tag} onChange={(e) => setPlayerForm({ ...playerForm, tag: e.target.value })} className={`w-full mb-2 p-2 ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-900'} border rounded`}><option value="none">No Tag</option><option value="suspicious">⚠️ Suspicious</option><option value="friendly">✓ Friendly</option></select><select value={playerForm.powerLevel} onChange={(e) => setPlayerForm({ ...playerForm, powerLevel: e.target.value })} className={`w-full mb-2 p-2 ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-900'} border rounded`}><option value="">Power Level (Optional)</option>{[...Array(30)].map((_, i) => <option key={i + 1} value={`${i + 1}`}>Level {i + 1}</option>)}{[...Array(10)].map((_, i) => <option key={`fc${i + 1}`} value={`FC${i + 1}`}>FC{i + 1}</option>)}</select><input type="text" placeholder="Alliance" value={playerForm.alliance} onChange={(e) => setPlayerForm({ ...playerForm, alliance: e.target.value })} className={`w-full mb-2 p-2 ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-900'} border rounded`} /><input type="text" placeholder="State" value={playerForm.state} onChange={(e) => setPlayerForm({ ...playerForm, state: e.target.value })} className={`w-full mb-2 p-2 ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-900'} border rounded`} /><textarea placeholder="Notes" value={playerForm.notes} onChange={(e) => setPlayerForm({ ...playerForm, notes: e.target.value })} className={`w-full mb-3 p-2 ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-900'} border rounded h-20`} /><button onClick={addOrUpdatePlayer} className="w-full py-2 bg-green-600 hover:bg-green-700 rounded font-medium text-white">{editingPlayer ? 'Update' : 'Save'} Player</button></div>)}
 
-                    <div className="space-y-4">{!filteredPlayers.length ? <div className={`text-center ${darkMode ? 'text-gray-400' : 'text-gray-600'} py-8`}>{!players.length ? 'No players added yet' : 'No players found'}</div> : sortedStates.map(state => {const alliances = Object.keys(playersByState[state]).sort((a,b) => a === 'No Alliance' ? 1 : b === 'No Alliance' ? -1 : a.localeCompare(b)); const total = Object.values(playersByState[state]).flat().length; return (<div key={state}><div className={`sticky top-0 ${darkMode ? 'bg-gradient-to-r from-blue-700 via-blue-600 to-blue-700 border-blue-500' : 'bg-gradient-to-r from-blue-500 via-blue-400 to-blue-500 border-blue-300'} px-4 py-3 rounded-lg mb-2 border shadow-lg`}><h3 className="font-bold text-white flex items-center">📍 {state} ({total})</h3></div><div className="space-y-3 ml-2">{alliances.map(alliance => (<div key={`${state}-${alliance}`}><div className={`${darkMode ? 'bg-gradient-to-r from-purple-800 to-purple-700 border-purple-600' : 'bg-gradient-to-r from-purple-600 to-purple-500 border-purple-400'} px-3 py-2 rounded mb-2 border shadow-md`}><h4 className="text-sm font-semibold text-white flex items-center">👥 {alliance} ({playersByState[state][alliance].length})</h4></div><div className="space-y-2 ml-2">{playersByState[state][alliance].map(player => {const dups = findDuplicateIds(player.playerId); const hasDups = dups.length > 1; const isExp = expandedPlayer === player.id; return (<div key={player.id} className={`rounded-lg border shadow-md ${hasDups ? (darkMode ? 'bg-gradient-to-br from-red-900/30 to-red-800/20 border-red-600 shadow-red-900/50' : 'bg-red-50 border-red-400') : (darkMode ? 'bg-gradient-to-br from-gray-800 to-gray-850 border-gray-700 hover:border-gray-600' : 'bg-white border-gray-300 hover:border-gray-400')}`}><div onClick={() => setExpandedPlayer(isExp ? null : player.id)} className={`${compactView ? 'p-2' : 'p-3'} cursor-pointer flex items-center justify-between`}><div className="flex-1"><div className="flex items-center gap-2 flex-wrap">{hasDups && <AlertTriangle size={16} className="text-red-400" />}<span className={`font-bold ${compactView ? 'text-sm' : ''}`}>{player.name}</span>{player.tag && player.tag !== 'none' && <span className={`text-xs px-2 py-0.5 rounded border ${getTagColor(player.tag)}`}>{getTagLabel(player.tag)}</span>}{player.powerLevel && <span className={`text-xs px-2 py-0.5 rounded ${darkMode ? 'bg-blue-900/40 text-blue-400' : 'bg-blue-100 text-blue-700'}`}>{player.powerLevel}</span>}</div><p className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>ID: {player.playerId}</p></div>{isExp ? <ChevronUp size={20} /> : <ChevronDown size={20} />}</div>{isExp && (<div className={`px-3 pb-3 border-t ${darkMode ? 'border-gray-700' : 'border-gray-300'}`}>{player.alliance && <p className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-700'} mt-2`}><span className={darkMode ? 'text-gray-500' : 'text-gray-600'}>Alliance:</span> {player.alliance}</p>}{player.state && <p className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}><span className={darkMode ? 'text-gray-500' : 'text-gray-600'}>State:</span> {player.state}</p>}{player.notes && <p className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-700'} mt-2`}><span className={darkMode ? 'text-gray-500' : 'text-gray-600'}>Notes:</span> {player.notes}</p>}{hasDups && <div className={`mt-3 pt-3 border-t ${darkMode ? 'border-red-600' : 'border-red-400'}`}><p className="text-sm font-bold text-red-400 mb-2">Previous identities:</p>{dups.filter(d => d.id !== player.id).map(d => <div key={d.id} className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-700'} ml-2 mb-1`}>• {d.name} {d.alliance && `[${d.alliance}]`} {d.state && `- ${d.state}`}</div>)}</div>}<div className="flex gap-2 mt-3"><button onClick={(e) => { e.stopPropagation(); editPlayer(player); }} className="flex-1 py-2 bg-blue-600 hover:bg-blue-700 rounded text-sm font-medium flex items-center justify-center text-white"><Edit2 size={16} className="mr-1" />Edit</button><button onClick={(e) => deletePlayer(player.id, e)} className="flex-1 py-2 bg-red-600 hover:bg-red-700 rounded text-sm font-medium flex items-center justify-center text-white"><Trash2 size={16} className="mr-1" />Delete</button></div></div>)}</div>);})}</div></div>))}</div></div>);})}</div>
+                    <div className="space-y-4">{!filteredPlayers.length ? <div className={`text-center ${darkMode ? 'text-gray-400' : 'text-gray-600'} py-8`}>No players found</div> : sortedStates.map(state => {const alliances = Object.keys(playersByState[state]).sort((a,b) => a === 'No Alliance' ? 1 : b === 'No Alliance' ? -1 : a.localeCompare(b)); const total = Object.values(playersByState[state]).flat().length; return (<div key={state}><div className={`sticky top-0 ${darkMode ? 'bg-gradient-to-r from-blue-700 via-blue-600 to-blue-700 border-blue-500' : 'bg-gradient-to-r from-blue-500 via-blue-400 to-blue-500 border-blue-300'} px-4 py-3 rounded-lg mb-2 border shadow-lg`}><h3 className="font-bold text-white flex items-center">📍 {state} ({total})</h3></div><div className="space-y-3 ml-2">{alliances.map(alliance => (<div key={`${state}-${alliance}`}><div className={`${darkMode ? 'bg-gradient-to-r from-purple-800 to-purple-700 border-purple-600' : 'bg-gradient-to-r from-purple-600 to-purple-500 border-purple-400'} px-3 py-2 rounded mb-2 border shadow-md`}><h4 className="text-sm font-semibold text-white flex items-center">👥 {alliance} ({playersByState[state][alliance].length})</h4></div><div className="space-y-2 ml-2">{playersByState[state][alliance].map(player => {const dups = findDuplicateIds(player.playerId); const hasDups = dups.length > 1; const isExp = expandedPlayer === player.id; return (<div key={player.id} className={`rounded-lg border shadow-md ${hasDups ? (darkMode ? 'bg-gradient-to-br from-red-900/30 to-red-800/20 border-red-600 shadow-red-900/50' : 'bg-red-50 border-red-400') : (darkMode ? 'bg-gradient-to-br from-gray-800 to-gray-850 border-gray-700 hover:border-gray-600' : 'bg-white border-gray-300 hover:border-gray-400')}`}><div onClick={() => setExpandedPlayer(isExp ? null : player.id)} className={`${compactView ? 'p-2' : 'p-3'} cursor-pointer flex items-center justify-between`}><div className="flex-1"><div className="flex items-center gap-2 flex-wrap">{hasDups && <AlertTriangle size={16} className="text-red-400" />}<span className={`font-bold ${compactView ? 'text-sm' : ''}`}>{player.name}</span>{player.tag && player.tag !== 'none' && <span className={`text-xs px-2 py-0.5 rounded border ${getTagColor(player.tag)}`}>{getTagLabel(player.tag)}</span>}{player.powerLevel && <span className={`text-xs px-2 py-0.5 rounded ${darkMode ? 'bg-blue-900/40 text-blue-400' : 'bg-blue-100 text-blue-700'}`}>{player.powerLevel}</span>}</div><p className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>ID: {player.playerId}</p><p className={`text-xs ${darkMode ? 'text-gray-500' : 'text-gray-500'}`}>Added by: {player.addedBy || 'Unknown'}</p></div>{isExp ? <ChevronUp size={20} /> : <ChevronDown size={20} />}</div>{isExp && (<div className={`px-3 pb-3 border-t ${darkMode ? 'border-gray-700' : 'border-gray-300'}`}>{player.alliance && <p className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-700'} mt-2`}><span className={darkMode ? 'text-gray-500' : 'text-gray-600'}>Alliance:</span> {player.alliance}</p>}{player.state && <p className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}><span className={darkMode ? 'text-gray-500' : 'text-gray-600'}>State:</span> {player.state}</p>}{player.notes && <p className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-700'} mt-2`}><span className={darkMode ? 'text-gray-500' : 'text-gray-600'}>Notes:</span> {player.notes}</p>}{player.lastEditedBy && <p className={`text-xs ${darkMode ? 'text-gray-500' : 'text-gray-500'} mt-2`}>Last edited by: {player.lastEditedBy}</p>}{hasDups && <div className={`mt-3 pt-3 border-t ${darkMode ? 'border-red-600' : 'border-red-400'}`}><p className="text-sm font-bold text-red-400 mb-2">Previous identities:</p>{dups.filter(d => d.id !== player.id).map(d => <div key={d.id} className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-700'} ml-2 mb-1`}>• {d.name} {d.alliance && `[${d.alliance}]`} {d.state && `- ${d.state}`}</div>)}</div>}<div className="flex gap-2 mt-3"><button onClick={(e) => { e.stopPropagation(); editPlayer(player); }} className="flex-1 py-2 bg-blue-600 hover:bg-blue-700 rounded text-sm font-medium flex items-center justify-center text-white"><Edit2 size={16} className="mr-1" />Edit</button><button onClick={(e) => deletePlayer(player.id, e)} className="flex-1 py-2 bg-red-600 hover:bg-red-700 rounded text-sm font-medium flex items-center justify-center text-white"><Trash2 size={16} className="mr-1" />Delete</button></div></div>)}</div>);})}</div></div>))}</div></div>);})}</div>
                   </div>
-                ) : (
+                ) : activeTab === 'history' ? (
                   <div>
+                    <div className={`mb-4 p-3 ${darkMode ? 'bg-blue-900/20 border-blue-700' : 'bg-blue-50 border-blue-300'} rounded-lg border`}>
+                      <p className={`text-sm ${darkMode ? 'text-blue-300' : 'text-blue-700'}`}>📜 Recent changes to the player database</p>
+                    </div>
+                    {changeHistory.length === 0 ? (
+                      <div className={`text-center ${darkMode ? 'text-gray-400' : 'text-gray-600'} py-8`}>No changes yet</div>
+                    ) : (
+                      <div className="space-y-2">
+                        {changeHistory.map(change => (
+                          <div key={change.id} className={`p-3 ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-300'} rounded-lg border`}>
+                            <div className="flex items-start gap-2">
+                              {change.action === 'added' && <Plus size={16} className="text-green-400 mt-1" />}
+                              {change.action === 'edited' && <Edit2 size={16} className="text-blue-400 mt-1" />}
+                              {change.action === 'deleted' && <Trash2 size={16} className="text-red-400 mt-1" />}
+                              <div className="flex-1">
+                                <p className="text-sm"><strong>{change.username}</strong> {change.action} <strong>{change.playerName}</strong></p>
+                                <p className={`text-xs ${darkMode ? 'text-gray-500' : 'text-gray-600'}`}>ID: {change.playerId}</p>
+                                <p className={`text-xs ${darkMode ? 'text-gray-500' : 'text-gray-600'}`}>{formatTimestamp(change.timestamp)}</p>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ) : (<div>
                     {showClearConfirm && (<div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4"><div className={`${darkMode ? 'bg-gradient-to-br from-gray-800 to-gray-900' : 'bg-white'} rounded-lg p-6 max-w-sm w-full border-2 border-red-600 shadow-2xl`}><h3 className="text-lg font-bold mb-3 text-red-400">⚠️ Clear All?</h3><p className={`${darkMode ? 'text-gray-300' : 'text-gray-700'} mb-4`}>Reset all troop amounts, squad sizes, and compositions?</p><div className="flex gap-3"><button onClick={() => setShowClearConfirm(false)} className={`flex-1 py-2 ${darkMode ? 'bg-gray-600 hover:bg-gray-700' : 'bg-gray-300 hover:bg-gray-400'} rounded font-medium`}>Cancel</button><button onClick={clearAllSquads} className="flex-1 py-2 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 rounded font-medium text-white">Clear All</button></div></div></div>)}
                     
                     <div className="mb-4"><button onClick={() => setShowClearConfirm(true)} className="w-full py-2 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 rounded-lg font-medium flex items-center justify-center shadow-lg text-white"><X size={20} className="mr-2" />Clear All</button></div>
@@ -347,16 +484,17 @@
                     {manualSquadMode && (<div className={`mb-4 p-4 ${darkMode ? 'bg-gradient-to-br from-purple-900/30 to-purple-800/20 border-purple-600' : 'bg-purple-50 border-purple-400'} rounded-lg border-2 shadow-xl`}><h3 className="font-bold mb-3 text-purple-400 flex items-center">🔧 Manual Squad Builder</h3><p className={`text-xs ${darkMode ? 'text-gray-400' : 'text-purple-700'} mb-3`}>Experiment with troop amounts and see ratios</p><div className="space-y-2 mb-3"><input type="number" placeholder="Infantry amount" value={manualSquad.infantry} onChange={(e) => setManualSquad({ ...manualSquad, infantry: e.target.value })} className={`w-full p-2 ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-purple-300 text-gray-900'} border rounded`} /><input type="number" placeholder="Lancer amount" value={manualSquad.lancer} onChange={(e) => setManualSquad({ ...manualSquad, lancer: e.target.value })} className={`w-full p-2 ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-purple-300 text-gray-900'} border rounded`} /><input type="number" placeholder="Marksmen amount" value={manualSquad.marksmen} onChange={(e) => setManualSquad({ ...manualSquad, marksmen: e.target.value })} className={`w-full p-2 ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-purple-300 text-gray-900'} border rounded`} /></div>{(() => {const r = calcManualRatios(); return r.total > 0 ? (<div className={`p-3 ${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-lg mb-3`}><p className="text-sm font-bold mb-2">Resulting Ratios:</p><div className="space-y-1 text-sm"><div className="flex justify-between"><span>Infantry:</span><span className={`font-bold ${darkMode ? 'text-blue-400' : 'text-blue-600'}`}>{r.infantry}%</span></div><div className="flex justify-between"><span>Lancer:</span><span className={`font-bold ${darkMode ? 'text-blue-400' : 'text-blue-600'}`}>{r.lancer}%</span></div><div className="flex justify-between"><span>Marksmen:</span><span className={`font-bold ${darkMode ? 'text-blue-400' : 'text-blue-600'}`}>{r.marksmen}%</span></div><div className={`flex justify-between border-t ${darkMode ? 'border-gray-700' : 'border-gray-300'} pt-1 mt-1`}><span>Total:</span><span className="font-bold">{r.total.toLocaleString()}</span></div></div></div>) : null;})()}<button onClick={applyManualRatios} className="w-full py-2 bg-purple-600 hover:bg-purple-700 rounded font-medium text-white">Apply These Ratios</button></div>)}
 
                     {errorMessage && (<div className="mb-4 p-4 bg-gradient-to-br from-red-900/40 to-red-800/30 border-2 border-red-600 rounded-lg shadow-lg"><p className="text-red-400 font-bold mb-2 flex items-center">⚠️ Error:</p><p className="text-sm text-red-300 whitespace-pre-line">{errorMessage}</p></div>)}
-<button onClick={calculateSquads} className="w-full mb-4 py-4 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 rounded-lg font-bold text-lg shadow-xl text-white">⚔️ Calculate Squads</button>   {calculatedSquads.length > 0 && (<div><div className="flex justify-between items-center mb-3"><h3 className="font-bold text-lg">Calculated Squads</h3><button onClick={() => setCalculatedSquads([])} className="text-sm text-red-400 hover:text-red-300">Clear</button></div><div className="mb-4 p-4 bg-gradient-to-br from-blue-900/40 to-blue-800/30 border-2 border-blue-600 rounded-lg shadow-lg"><p className="text-sm font-bold mb-2 text-blue-400 flex items-center">📊 Total Usage:</p><p className={`text-xs ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>Infantry: {calculatedSquads.reduce((s, sq) => s + sq.infantry, 0).toLocaleString()} / {totalTroops.infantry}</p><p className={`text-xs ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>Lancer: {calculatedSquads.reduce((s, sq) => s + sq.lancer, 0).toLocaleString()} / {totalTroops.lancer}</p><p className={`text-xs ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>Marksmen: {calculatedSquads.reduce((s, sq) => s + sq.marksmen, 0).toLocaleString()} / {totalTroops.marksmen}</p></div><div className="space-y-2">{calculatedSquads.map(sq => (<div key={sq.id} className={`p-4 ${darkMode ? 'bg-gradient-to-br from-gray-800 to-gray-850 border-gray-700' : 'bg-white border-gray-300'} rounded-lg border shadow-md`}><h4 className={`font-bold mb-2 flex items-center ${darkMode ? 'text-blue-400' : 'text-blue-600'}`}>⚔️ Squad {sq.id}</h4><div className="space-y-1 text-sm"><div className="flex justify-between"><span className={darkMode ? 'text-gray-400' : 'text-gray-600'}>Infantry:</span><span>{sq.infantry.toLocaleString()} ({squadComposition.infantry}%)</span></div><div className="flex justify-between"><span className={darkMode ? 'text-gray-400' : 'text-gray-600'}>Lancer:</span><span>{sq.lancer.toLocaleString()} ({squadComposition.lancer}%)</span></div><div className="flex justify-between"><span className={darkMode ? 'text-gray-400' : 'text-gray-600'}>Marksmen:</span><span>{sq.marksmen.toLocaleString()} ({squadComposition.marksmen}%)</span></div><div className={`flex justify-between border-t ${darkMode ? 'border-gray-700' : 'border-gray-300'} pt-1 mt-1 font-bold`}><span>Total:</span><span>{sq.total.toLocaleString()}</span></div></div></div>))}</div></div>)}
-              </div>
-            )}
-          </div>
-        </div>
-      );
-    }
+                    <button onClick={calculateSquads} className="w-full mb-4 py-4 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 rounded-lg font-bold text-lg shadow-xl text-white">⚔️ Calculate Squads</button>
 
-    ReactDOM.render(<GameTracker />, document.getElementById('root'));
-</script>
+                    {calculatedSquads.length > 0 && (<div><div className="flex justify-between items-center mb-3"><h3 className="font-bold text-lg">Calculated Squads</h3><button onClick={() => setCalculatedSquads([])} className="text-sm text-red-400 hover:text-red-300">Clear</button></div><div className="mb-4 p-4 bg-gradient-to-br from-blue-900/40 to-blue-800/30 border-2 border-blue-600 rounded-lg shadow-lg"><p className="text-sm font-bold mb-2 text-blue-400 flex items-center">📊 Total Usage:</p><p className={`text-xs ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>Infantry: {calculatedSquads.reduce((s, sq) => s + sq.infantry, 0).toLocaleString()} / {totalTroops.infantry}</p><p className={`text-xs ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>Lancer: {calculatedSquads.reduce((s, sq) => s + sq.lancer, 0).toLocaleString()} / {totalTroops.lancer}</p><p className={`text-xs ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>Marksmen: {calculatedSquads.reduce((s, sq) => s + sq.marksmen, 0).toLocaleString()} / {totalTroops.marksmen}</p></div><div className="space-y-2">{calculatedSquads.map(sq => (<div key={sq.id} className={`p-4 ${darkMode ? 'bg-gradient-to-br from-gray-800 to-gray-850 border-gray-700' : 'bg-white border-gray-300'} rounded-lg border shadow-md`}><h4 className={`font-bold mb-2 flex items-center ${darkMode ? 'text-blue-400' : 'text-blue-600'}`}>⚔️ Squad {sq.id}</h4><div className="space-y-1 text-sm"><div className="flex justify-between"><span className={darkMode ? 'text-gray-400' : 'text-gray-600'}>Infantry:</span><span>{sq.infantry.toLocaleString()} ({squadComposition.infantry}%)</span></div><div className="flex justify-between"><span className={darkMode ? 'text-gray-400' : 'text-gray-600'}>Lancer:</span><span>{sq.lancer.toLocaleString()} ({squadComposition.lancer}%)</span></div><div className="flex justify-between"><span className={darkMode ? 'text-gray-400' : 'text-gray-600'}>Marksmen:</span><span>{sq.marksmen.toLocaleString()} ({squadComposition.marksmen}%)</span></div><div className={`flex justify-between border-t ${darkMode ? 'border-gray-700' : 'border-gray-300'} pt-1 mt-1 font-bold`}><span>Total:</span><span>{sq.total.toLocaleString()}</span></div></div></div>))}</div></div>)}
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        }
+
+        ReactDOM.render(<GameTracker />, document.getElementById('root'));
+    </script>
 </body>
 </html>
-```
