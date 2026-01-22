@@ -28,6 +28,246 @@
         
         const { useState, useEffect } = React;
         
+        const translations = {
+          en: {
+            title: "BadSanta's Helper",
+            players: "Players",
+            squads: "Squads",
+            sharedDb: "Shared Database: All players are synced in real-time with everyone!",
+            quickSearch: "Quick Search",
+            byPlayerId: "By Player ID",
+            byAlliance: "By Alliance",
+            byState: "By State",
+            searchBtn: "Search",
+            searchPlayers: "Search players...",
+            exportBackup: "Export Backup",
+            addPlayer: "Add Player",
+            editPlayer: "Edit Player",
+            addNewPlayer: "Add New Player",
+            playerName: "Player Name",
+            playerId: "Player ID",
+            noTag: "No Tag",
+            suspicious: "Suspicious",
+            friendly: "Friendly",
+            powerLevel: "Power Level (Optional)",
+            alliance: "Alliance",
+            state: "State",
+            notes: "Notes",
+            savePlayer: "Save Player",
+            updatePlayer: "Update Player",
+            edit: "Edit",
+            delete: "Delete",
+            confirmDelete: "Confirm Delete",
+            deleteQuestion: "Delete this player record?",
+            cancel: "Cancel",
+            noPlayersFound: "No players found",
+            found: "Found",
+            recordsForId: "record(s) for ID:",
+            nameChanged: "This player changed names",
+            times: "times!",
+            noPlayerWithId: "No player with ID:",
+            inAlliance: "in alliance",
+            inState: "in state",
+            previousIdentities: "Previous identities:",
+            clearAll: "Clear All",
+            clearAllQuestion: "Reset all troop amounts, squad sizes, and compositions?",
+            totalTroops: "Total Available Troops",
+            infantry: "Infantry",
+            lancer: "Lancer",
+            marksmen: "Marksmen",
+            squadSizes: "Squad Sizes",
+            addSquad: "Add Squad",
+            enterTroopCount: "Enter total troop count per squad",
+            squad: "Squad",
+            troopCount: "Troop count",
+            squadComposition: "Squad Composition (%)",
+            savedPresets: "Saved Presets:",
+            useAll: "Use all of a specific troop type:",
+            useAllInfantry: "Use All Infantry",
+            useAllLancer: "Use All Lancer",
+            useAllMarksmen: "Use All Marksmen",
+            total: "Total",
+            saveComposition: "Save current composition:",
+            presetName: "Preset name (e.g. 'Defense')",
+            save: "Save",
+            manualBuilder: "Manual Squad Builder",
+            hide: "Hide",
+            experimentTroops: "Experiment with troop amounts and see ratios",
+            infantryAmount: "Infantry amount",
+            lancerAmount: "Lancer amount",
+            marksmenAmount: "Marksmen amount",
+            resultingRatios: "Resulting Ratios:",
+            applyRatios: "Apply These Ratios",
+            error: "Error:",
+            calculateSquads: "Calculate Squads",
+            calculatedSquads: "Calculated Squads",
+            clear: "Clear",
+            totalUsage: "Total Usage:",
+            enterPlayerId: "Enter Player ID...",
+            enterAlliance: "Enter Alliance...",
+            enterState: "Enter State...",
+            id: "ID"
+          },
+          es: {
+            title: "Ayudante de BadSanta",
+            players: "Jugadores",
+            squads: "Escuadrones",
+            sharedDb: "¡Base de datos compartida: Todos los jugadores se sincronizan en tiempo real!",
+            quickSearch: "Búsqueda Rápida",
+            byPlayerId: "Por ID de Jugador",
+            byAlliance: "Por Alianza",
+            byState: "Por Estado",
+            searchBtn: "Buscar",
+            searchPlayers: "Buscar jugadores...",
+            exportBackup: "Exportar Respaldo",
+            addPlayer: "Agregar Jugador",
+            editPlayer: "Editar Jugador",
+            addNewPlayer: "Agregar Nuevo Jugador",
+            playerName: "Nombre del Jugador",
+            playerId: "ID del Jugador",
+            noTag: "Sin Etiqueta",
+            suspicious: "Sospechoso",
+            friendly: "Amigable",
+            powerLevel: "Nivel de Poder (Opcional)",
+            alliance: "Alianza",
+            state: "Estado",
+            notes: "Notas",
+            savePlayer: "Guardar Jugador",
+            updatePlayer: "Actualizar Jugador",
+            edit: "Editar",
+            delete: "Eliminar",
+            confirmDelete: "Confirmar Eliminación",
+            deleteQuestion: "¿Eliminar este registro de jugador?",
+            cancel: "Cancelar",
+            noPlayersFound: "No se encontraron jugadores",
+            found: "Encontrado",
+            recordsForId: "registro(s) para ID:",
+            nameChanged: "Este jugador cambió de nombre",
+            times: "veces!",
+            noPlayerWithId: "Ningún jugador con ID:",
+            inAlliance: "en alianza",
+            inState: "en estado",
+            previousIdentities: "Identidades previas:",
+            clearAll: "Limpiar Todo",
+            clearAllQuestion: "¿Restablecer todas las cantidades de tropas, tamaños de escuadrones y composiciones?",
+            totalTroops: "Tropas Disponibles Totales",
+            infantry: "Infantería",
+            lancer: "Lanceros",
+            marksmen: "Tiradores",
+            squadSizes: "Tamaños de Escuadrón",
+            addSquad: "Agregar Escuadrón",
+            enterTroopCount: "Ingrese el total de tropas por escuadrón",
+            squad: "Escuadrón",
+            troopCount: "Cantidad de tropas",
+            squadComposition: "Composición del Escuadrón (%)",
+            savedPresets: "Preajustes Guardados:",
+            useAll: "Usar todas las tropas de un tipo específico:",
+            useAllInfantry: "Usar Toda Infantería",
+            useAllLancer: "Usar Todos Lanceros",
+            useAllMarksmen: "Usar Todos Tiradores",
+            total: "Total",
+            saveComposition: "Guardar composición actual:",
+            presetName: "Nombre del preajuste (ej. 'Defensa')",
+            save: "Guardar",
+            manualBuilder: "Constructor Manual de Escuadrón",
+            hide: "Ocultar",
+            experimentTroops: "Experimenta con cantidades de tropas y ve las proporciones",
+            infantryAmount: "Cantidad de infantería",
+            lancerAmount: "Cantidad de lanceros",
+            marksmenAmount: "Cantidad de tiradores",
+            resultingRatios: "Proporciones Resultantes:",
+            applyRatios: "Aplicar Estas Proporciones",
+            error: "Error:",
+            calculateSquads: "Calcular Escuadrones",
+            calculatedSquads: "Escuadrones Calculados",
+            clear: "Limpiar",
+            totalUsage: "Uso Total:",
+            enterPlayerId: "Ingresar ID de Jugador...",
+            enterAlliance: "Ingresar Alianza...",
+            enterState: "Ingresar Estado...",
+            id: "ID"
+          },
+          ar: {
+            title: "مساعد BadSanta",
+            players: "اللاعبون",
+            squads: "الفرق",
+            sharedDb: "قاعدة بيانات مشتركة: جميع اللاعبين متزامنون في الوقت الفعلي!",
+            quickSearch: "بحث سريع",
+            byPlayerId: "حسب معرف اللاعب",
+            byAlliance: "حسب التحالف",
+            byState: "حسب الولاية",
+            searchBtn: "بحث",
+            searchPlayers: "البحث عن اللاعبين...",
+            exportBackup: "تصدير نسخة احتياطية",
+            addPlayer: "إضافة لاعب",
+            editPlayer: "تعديل اللاعب",
+            addNewPlayer: "إضافة لاعب جديد",
+            playerName: "اسم اللاعب",
+            playerId: "معرف اللاعب",
+            noTag: "بدون علامة",
+            suspicious: "مشبوه",
+            friendly: "ودود",
+            powerLevel: "مستوى القوة (اختياري)",
+            alliance: "التحالف",
+            state: "الولاية",
+            notes: "ملاحظات",
+            savePlayer: "حفظ اللاعب",
+            updatePlayer: "تحديث اللاعب",
+            edit: "تعديل",
+            delete: "حذف",
+            confirmDelete: "تأكيد الحذف",
+            deleteQuestion: "حذف سجل اللاعب هذا؟",
+            cancel: "إلغاء",
+            noPlayersFound: "لم يتم العثور على لاعبين",
+            found: "تم العثور على",
+            recordsForId: "سجل (سجلات) للمعرف:",
+            nameChanged: "غيّر هذا اللاعب اسمه",
+            times: "مرات!",
+            noPlayerWithId: "لا يوجد لاعب بالمعرف:",
+            inAlliance: "في التحالف",
+            inState: "في الولاية",
+            previousIdentities: "الهويات السابقة:",
+            clearAll: "مسح الكل",
+            clearAllQuestion: "إعادة تعيين جميع كميات القوات وأحجام الفرق والتركيبات؟",
+            totalTroops: "إجمالي القوات المتاحة",
+            infantry: "المشاة",
+            lancer: "الرماح",
+            marksmen: "الرماة",
+            squadSizes: "أحجام الفرق",
+            addSquad: "إضافة فرقة",
+            enterTroopCount: "أدخل إجمالي عدد القوات لكل فرقة",
+            squad: "فرقة",
+            troopCount: "عدد القوات",
+            squadComposition: "تركيب الفرقة (%)",
+            savedPresets: "الإعدادات المحفوظة:",
+            useAll: "استخدام جميع قوات نوع معين:",
+            useAllInfantry: "استخدام كل المشاة",
+            useAllLancer: "استخدام كل الرماح",
+            useAllMarksmen: "استخدام كل الرماة",
+            total: "المجموع",
+            saveComposition: "حفظ التركيب الحالي:",
+            presetName: "اسم الإعداد (مثل 'دفاع')",
+            save: "حفظ",
+            manualBuilder: "منشئ الفرق اليدوي",
+            hide: "إخفاء",
+            experimentTroops: "جرب كميات القوات وشاهد النسب",
+            infantryAmount: "كمية المشاة",
+            lancerAmount: "كمية الرماح",
+            marksmenAmount: "كمية الرماة",
+            resultingRatios: "النسب الناتجة:",
+            applyRatios: "تطبيق هذه النسب",
+            error: "خطأ:",
+            calculateSquads: "حساب الفرق",
+            calculatedSquads: "الفرق المحسوبة",
+            clear: "مسح",
+            totalUsage: "الاستخدام الإجمالي:",
+            enterPlayerId: "أدخل معرف اللاعب...",
+            enterAlliance: "أدخل التحالف...",
+            enterState: "أدخل الولاية...",
+            id: "المعرف"
+          }
+        };
+        
         const Search = ({size = 24, className = ""}) => (
             <svg width={size} height={size} className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>
         );
@@ -58,14 +298,15 @@
         const ChevronUp = ({size = 24, className = ""}) => (
             <svg width={size} height={size} className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="18 15 12 9 6 15"></polyline></svg>
         );
-        const Clock = ({size = 24, className = ""}) => (
-            <svg width={size} height={size} className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+        const ChevronRight = ({size = 24, className = ""}) => (
+            <svg width={size} height={size} className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
         );
 
         function GameTracker() {
           const [activeTab, setActiveTab] = useState('players');
           const [players, setPlayers] = useState([]);
-          const [changeHistory, setChangeHistory] = useState([]);
+          const [expandedStates, setExpandedStates] = useState({});
+          const [expandedAlliances, setExpandedAlliances] = useState({});
           const [expandedPlayer, setExpandedPlayer] = useState(null);
           const [searchTerm, setSearchTerm] = useState('');
           const [idSearchTerm, setIdSearchTerm] = useState('');
@@ -74,11 +315,7 @@
           const [allianceSearchResults, setAllianceSearchResults] = useState([]);
           const [stateSearchTerm, setStateSearchTerm] = useState('');
           const [stateSearchResults, setStateSearchResults] = useState([]);
-          const [darkMode, setDarkMode] = useState(true);
-          const [compactView, setCompactView] = useState(false);
-          const [username, setUsername] = useState('');
-          const [showUsernamePrompt, setShowUsernamePrompt] = useState(false);
-          const [tempUsername, setTempUsername] = useState('');
+          const [language, setLanguage] = useState('en');
           
           const [playerForm, setPlayerForm] = useState({
             name: '', alliance: '', state: '', playerId: '', notes: '', tag: 'none', powerLevel: ''
@@ -98,23 +335,17 @@
           const [savedSquadPresets, setSavedSquadPresets] = useState([]);
           const [presetName, setPresetName] = useState('');
 
+          const t = translations[language];
+          const isRTL = language === 'ar';
+
           useEffect(() => {
-            const savedUsername = localStorage.getItem('badsanta_username');
-            const savedDarkMode = localStorage.getItem('darkMode');
-            const savedCompactView = localStorage.getItem('compactView');
+            const savedLanguage = localStorage.getItem('badsanta_language');
             const savedTotalTroops = localStorage.getItem('totalTroops');
             const savedSquadComposition = localStorage.getItem('squadComposition');
             const savedSquadSizes = localStorage.getItem('squadSizes');
             const savedPresets = localStorage.getItem('squadPresets');
             
-            if (savedUsername) {
-              setUsername(savedUsername);
-            } else {
-              setShowUsernamePrompt(true);
-            }
-            
-            if (savedDarkMode !== null) setDarkMode(JSON.parse(savedDarkMode));
-            if (savedCompactView !== null) setCompactView(JSON.parse(savedCompactView));
+            if (savedLanguage) setLanguage(savedLanguage);
             if (savedTotalTroops) setTotalTroops(JSON.parse(savedTotalTroops));
             if (savedSquadComposition) setSquadComposition(JSON.parse(savedSquadComposition));
             if (savedSquadSizes) setSquadSizes(JSON.parse(savedSquadSizes));
@@ -122,9 +353,7 @@
           }, []);
 
           useEffect(() => {
-            if (!username) return;
-            
-            const unsubscribePlayers = db.collection('players').onSnapshot(snapshot => {
+            const unsubscribe = db.collection('players').onSnapshot(snapshot => {
               const playerData = [];
               snapshot.forEach(doc => {
                 playerData.push({ id: doc.id, ...doc.data() });
@@ -132,94 +361,48 @@
               setPlayers(playerData);
             });
 
-            const unsubscribeHistory = db.collection('changeHistory')
-              .orderBy('timestamp', 'desc')
-              .limit(100)
-              .onSnapshot(snapshot => {
-                const historyData = [];
-                snapshot.forEach(doc => {
-                  historyData.push({ id: doc.id, ...doc.data() });
-                });
-                setChangeHistory(historyData);
-              });
-
-            return () => {
-              unsubscribePlayers();
-              unsubscribeHistory();
-            };
-          }, [username]);
+            return () => unsubscribe();
+          }, []);
 
           useEffect(() => { localStorage.setItem('totalTroops', JSON.stringify(totalTroops)); }, [totalTroops]);
           useEffect(() => { localStorage.setItem('squadComposition', JSON.stringify(squadComposition)); }, [squadComposition]);
           useEffect(() => { localStorage.setItem('squadSizes', JSON.stringify(squadSizes)); }, [squadSizes]);
           useEffect(() => { localStorage.setItem('squadPresets', JSON.stringify(savedSquadPresets)); }, [savedSquadPresets]);
-          useEffect(() => { localStorage.setItem('darkMode', JSON.stringify(darkMode)); }, [darkMode]);
-          useEffect(() => { localStorage.setItem('compactView', JSON.stringify(compactView)); }, [compactView]);
+          useEffect(() => { localStorage.setItem('badsanta_language', language); }, [language]);
 
-          const saveUsername = () => {
-            if (!tempUsername.trim()) {
-              alert('Please enter a username');
-              return;
-            }
-            localStorage.setItem('badsanta_username', tempUsername.trim());
-            setUsername(tempUsername.trim());
-            setShowUsernamePrompt(false);
+          const toggleState = (state) => {
+            setExpandedStates(prev => ({ ...prev, [state]: !prev[state] }));
           };
 
-          const logChange = async (action, playerName, playerId) => {
-            try {
-              await db.collection('changeHistory').add({
-                action,
-                playerName,
-                playerId,
-                username,
-                timestamp: firebase.firestore.FieldValue.serverTimestamp()
-              });
-            } catch (error) {
-              console.error('Error logging change:', error);
-            }
+          const toggleAlliance = (stateAllianceKey) => {
+            setExpandedAlliances(prev => ({ ...prev, [stateAllianceKey]: !prev[stateAllianceKey] }));
           };
 
           const addOrUpdatePlayer = async () => {
             if (!playerForm.name || !playerForm.playerId) {
-              alert('Please enter at least Name and Player ID');
+              alert(t.playerName + ' and ' + t.playerId + ' required');
               return;
             }
 
             try {
               if (editingPlayer) {
-                await db.collection('players').doc(editingPlayer.id).update({
-                  ...playerForm,
-                  lastEditedBy: username,
-                  lastEditedAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-                await logChange('edited', playerForm.name, playerForm.playerId);
+                await db.collection('players').doc(editingPlayer.id).update(playerForm);
                 setEditingPlayer(null);
               } else {
-                await db.collection('players').add({
-                  ...playerForm,
-                  addedBy: username,
-                  addedAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-                await logChange('added', playerForm.name, playerForm.playerId);
+                await db.collection('players').add(playerForm);
               }
               setPlayerForm({ name: '', alliance: '', state: '', playerId: '', notes: '', tag: 'none', powerLevel: '' });
               setShowPlayerForm(false);
             } catch (error) {
-              alert('Error saving player: ' + error.message);
+              alert('Error: ' + error.message);
             }
           };
 
           const editPlayer = (player) => {
             setEditingPlayer(player);
             setPlayerForm({
-              name: player.name,
-              alliance: player.alliance || '',
-              state: player.state || '',
-              playerId: player.playerId,
-              notes: player.notes || '',
-              tag: player.tag || 'none',
-              powerLevel: player.powerLevel || ''
+              name: player.name, alliance: player.alliance || '', state: player.state || '',
+              playerId: player.playerId, notes: player.notes || '', tag: player.tag || 'none', powerLevel: player.powerLevel || ''
             });
             setShowPlayerForm(true);
             setExpandedPlayer(null);
@@ -229,13 +412,11 @@
           
           const confirmDelete = async () => {
             try {
-              const player = players.find(p => p.id === deletingPlayerId);
               await db.collection('players').doc(deletingPlayerId).delete();
-              await logChange('deleted', player.name, player.playerId);
               if (expandedPlayer === deletingPlayerId) setExpandedPlayer(null);
               setDeletingPlayerId(null);
             } catch (error) {
-              alert('Error deleting player: ' + error.message);
+              alert('Error: ' + error.message);
             }
           };
 
@@ -243,7 +424,7 @@
           const cancelPlayerForm = () => { setShowPlayerForm(false); setEditingPlayer(null); setPlayerForm({ name: '', alliance: '', state: '', playerId: '', notes: '', tag: 'none', powerLevel: '' }); };
 
           const exportPlayers = () => {
-            if (players.length === 0) { alert('No players to export'); return; }
+            if (players.length === 0) { alert('No players'); return; }
             const blob = new Blob([JSON.stringify(players, null, 2)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const link = document.createElement('a');
@@ -257,16 +438,14 @@
 
           const searchById = () => setIdSearchResults(idSearchTerm.trim() ? players.filter(p => p.playerId === idSearchTerm.trim()) : []);
           const searchByAlliance = () => setAllianceSearchResults(allianceSearchTerm.trim() ? players.filter(p => p.alliance?.toLowerCase().includes(allianceSearchTerm.trim().toLowerCase())) : []);
-          const searchByState = () => setStateSearchResults(stateSearchTerm.trim() ? players.filter(p => p.state?.toLowerCase().includes(stateSearchTerm.trim().toLowerCase())) : []);
-
-          const calculateSquads = () => {
+          const searchByState = () => setStateSearchResults(stateSearchTerm.trim() ? players.filter(p => p.state?.toLowerCase().includes(stateSearchTerm.trim().toLowerCase())) : []); const calculateSquads = () => {
             setErrorMessage('');
             const [inf, lan, mar] = [parseFloat(totalTroops.infantry)||0, parseFloat(totalTroops.lancer)||0, parseFloat(totalTroops.marksmen)||0];
-            if (!inf && !lan && !mar) { setErrorMessage('Enter total troops'); return; }
+            if (!inf && !lan && !mar) { setErrorMessage(t.totalTroops + ' required'); return; }
             const sizes = squadSizes.map(s => parseFloat(s)).filter(s => !isNaN(s) && s > 0);
-            if (!sizes.length) { setErrorMessage('Enter at least one squad size'); return; }
+            if (!sizes.length) { setErrorMessage(t.squadSizes + ' required'); return; }
             const [iPct, lPct, mPct] = [parseFloat(squadComposition.infantry)||0, parseFloat(squadComposition.lancer)||0, parseFloat(squadComposition.marksmen)||0];
-            if (Math.abs(iPct + lPct + mPct - 100) > 0.1) { setErrorMessage(`Percentages must = 100% (${(iPct+lPct+mPct).toFixed(1)}%)`); return; }
+            if (Math.abs(iPct + lPct + mPct - 100) > 0.1) { setErrorMessage(`${t.total}: ${(iPct+lPct+mPct).toFixed(1)}% (need 100%)`); return; }
             const squads = []; let [tI, tL, tM] = [0,0,0];
             sizes.forEach((sz, idx) => {
               const [si, sl, sm] = [Math.floor(sz*iPct/100), Math.floor(sz*lPct/100), Math.floor(sz*mPct/100)];
@@ -274,7 +453,7 @@
               squads.push({ id: idx+1, targetSize: sz, infantry: si, lancer: sl, marksmen: sm, total: si+sl+sm });
             });
             if (tI > inf || tL > lan || tM > mar) {
-              setErrorMessage(`Not enough!\n• Infantry: ${tI.toLocaleString()} (have ${inf.toLocaleString()})\n• Lancer: ${tL.toLocaleString()} (have ${lan.toLocaleString()})\n• Marksmen: ${tM.toLocaleString()} (have ${mar.toLocaleString()})`);
+              setErrorMessage(`Not enough!\n• ${t.infantry}: ${tI.toLocaleString()} (have ${inf.toLocaleString()})\n• ${t.lancer}: ${tL.toLocaleString()} (have ${lan.toLocaleString()})\n• ${t.marksmen}: ${tM.toLocaleString()} (have ${mar.toLocaleString()})`);
               return;
             }
             setCalculatedSquads(squads);
@@ -287,11 +466,11 @@
           const suggestRatioToUseAll = (type) => {
             const [inf, lan, mar] = [parseFloat(totalTroops.infantry)||0, parseFloat(totalTroops.lancer)||0, parseFloat(totalTroops.marksmen)||0];
             const sizes = squadSizes.map(s => parseFloat(s)).filter(s => !isNaN(s) && s > 0);
-            if (!sizes.length) { alert('Enter squad sizes first'); return; }
+            if (!sizes.length) { alert(t.squadSizes + ' first'); return; }
             const total = sizes.reduce((a,b) => a+b, 0);
-            if (!total) { alert('Total squad size is 0'); return; }
+            if (!total) { alert('Total = 0'); return; }
             const pct = (type === 'infantry' ? inf : type === 'lancer' ? lan : mar) / total * 100;
-            if (pct > 100) { alert(`Not enough capacity for all ${type}`); return; }
+            if (pct > 100) { alert(`Not enough for all ${type}`); return; }
             const rem = 100 - pct;
             let [i, l, m] = [0,0,0];
             if (type === 'infantry') { i = pct; l = Math.min(lan/total*100, rem); m = 100-i-l; }
@@ -308,7 +487,7 @@
           };
           const applyManualRatios = () => {
             const r = calcManualRatios();
-            if (r.total) { setSquadComposition({ infantry: r.infantry, lancer: r.lancer, marksmen: r.marksmen }); alert('Ratios applied!'); }
+            if (r.total) { setSquadComposition({ infantry: r.infantry, lancer: r.lancer, marksmen: r.marksmen }); alert(t.applyRatios + '!'); }
           };
 
           const clearAllSquads = () => {
@@ -322,17 +501,17 @@
           };
 
           const savePreset = () => {
-            if (!presetName.trim()) { alert('Enter preset name'); return; }
+            if (!presetName.trim()) { alert(t.presetName); return; }
             const p = { id: Date.now(), name: presetName, composition: {...squadComposition} };
             setSavedSquadPresets([...savedSquadPresets, p]);
             setPresetName('');
-            alert(`Preset "${p.name}" saved!`);
+            alert(`"${p.name}" ${t.save}!`);
           };
           const loadPreset = (p) => { setSquadComposition(p.composition); alert(`Loaded "${p.name}"`); };
           const deletePreset = (id) => setSavedSquadPresets(savedSquadPresets.filter(p => p.id !== id));
 
           const getTagColor = (t) => t === 'suspicious' ? 'bg-red-600/30 border-red-500 text-red-400' : t === 'friendly' ? 'bg-green-600/30 border-green-500 text-green-400' : '';
-          const getTagLabel = (t) => t === 'suspicious' ? '⚠️ Suspicious' : t === 'friendly' ? '✓ Friendly' : '';
+          const getTagLabel = (tag) => tag === 'suspicious' ? `⚠️ ${t.suspicious}` : tag === 'friendly' ? `✓ ${t.friendly}` : '';
           const findDuplicateIds = (id) => players.filter(p => p.playerId === id);
 
           const filteredPlayers = players.filter(p =>
@@ -352,51 +531,22 @@
 
           const sortedStates = Object.keys(playersByState).sort((a,b) => a === 'No State' ? 1 : b === 'No State' ? -1 : a.localeCompare(b));
 
-          const formatTimestamp = (timestamp) => {
-            if (!timestamp) return 'Unknown';
-            const date = timestamp.toDate();
-            const now = new Date();
-            const diff = now - date;
-            const minutes = Math.floor(diff / 60000);
-            const hours = Math.floor(diff / 3600000);
-            const days = Math.floor(diff / 86400000);
-            
-            if (minutes < 1) return 'Just now';
-            if (minutes < 60) return `${minutes}m ago`;
-            if (hours < 24) return `${hours}h ago`;
-            if (days < 7) return `${days}d ago`;
-            return date.toLocaleDateString();
-          };
-            return (
-            <div className={`min-h-screen ${darkMode ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-gray-100' : 'bg-gradient-to-br from-gray-100 via-white to-gray-100 text-gray-900'}`}>
-              {showUsernamePrompt && (
-                <div className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 p-4">
-                  <div className={`${darkMode ? 'bg-gradient-to-br from-gray-800 to-gray-900' : 'bg-white'} rounded-lg p-6 max-w-sm w-full border-2 border-blue-600 shadow-2xl`}>
-                    <h3 className="text-lg font-bold mb-3 text-blue-400">👋 Welcome to BadSanta's Helper!</h3>
-                    <p className={`${darkMode ? 'text-gray-300' : 'text-gray-700'} mb-4`}>Enter your username to start tracking players. This will be shown when you add or edit players.</p>
-                    <input type="text" placeholder="Your username" value={tempUsername} onChange={(e) => setTempUsername(e.target.value)} onKeyPress={(e) => e.key === 'Enter' && saveUsername()} className={`w-full mb-3 p-2 ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-900'} border rounded`} autoFocus />
-                    <button onClick={saveUsername} className="w-full py-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 rounded font-medium text-white">Continue</button>
-                  </div>
-                </div>
-              )}
-
-              <div className={`${darkMode ? 'bg-gradient-to-r from-red-900 via-red-800 to-red-900 border-b border-red-700' : 'bg-gradient-to-r from-red-600 via-red-500 to-red-600 border-b border-red-400'} p-4 shadow-lg`}>
+          return (
+            <div className="min-h-screen bg-gradient-to-br from-gray-100 via-white to-gray-100 text-gray-900" dir={isRTL ? 'rtl' : 'ltr'}>
+              <div className="bg-gradient-to-r from-red-600 via-red-500 to-red-600 border-b border-red-400 p-4 shadow-lg">
                 <div className="flex justify-between items-center">
-                  <div>
-                    <h1 className="text-3xl font-bold text-white drop-shadow-lg">🎅 BadSanta's Helper 🎄</h1>
-                    {username && <p className="text-xs text-white/70 mt-1">Logged in as: {username}</p>}
-                  </div>
+                  <h1 className="text-3xl font-bold text-white drop-shadow-lg">🎅 {t.title} 🎄</h1>
                   <div className="flex gap-2">
-                    <button onClick={() => setDarkMode(!darkMode)} className={`px-3 py-1 rounded-lg text-sm font-medium ${darkMode ? 'bg-yellow-500 text-gray-900' : 'bg-gray-800 text-white'}`}>{darkMode ? '☀️' : '🌙'}</button>
-                    <button onClick={() => setCompactView(!compactView)} className={`px-3 py-1 rounded-lg text-sm font-medium ${darkMode ? 'bg-blue-600 text-white' : 'bg-blue-500 text-white'}`}>{compactView ? '📋' : '📱'}</button>
+                    <button onClick={() => setLanguage('en')} className={`px-2 py-1 rounded text-sm font-medium ${language === 'en' ? 'bg-white text-red-600' : 'bg-red-700 text-white'}`}>🇬🇧 EN</button>
+                    <button onClick={() => setLanguage('es')} className={`px-2 py-1 rounded text-sm font-medium ${language === 'es' ? 'bg-white text-red-600' : 'bg-red-700 text-white'}`}>🇪🇸 ES</button>
+                    <button onClick={() => setLanguage('ar')} className={`px-2 py-1 rounded text-sm font-medium ${language === 'ar' ? 'bg-white text-red-600' : 'bg-red-700 text-white'}`}>🇸🇦 AR</button>
                   </div>
                 </div>
               </div>
 
-              <div className={`flex ${darkMode ? 'bg-gray-800 border-b border-gray-700' : 'bg-white border-b border-gray-300'} shadow-md`}>
-                <button onClick={() => setActiveTab('players')} className={`flex-1 py-4 px-4 font-medium transition-all ${activeTab === 'players' ? 'bg-gradient-to-b from-blue-600 to-blue-700 text-white border-b-2 border-blue-400 shadow-lg' : `${darkMode ? 'text-gray-400 hover:bg-gray-700' : 'text-gray-600 hover:bg-gray-100'}`}`}><Users className="inline mr-2" size={20} />Players</button>
-                <button onClick={() => setActiveTab('history')} className={`flex-1 py-4 px-4 font-medium transition-all ${activeTab === 'history' ? 'bg-gradient-to-b from-blue-600 to-blue-700 text-white border-b-2 border-blue-400 shadow-lg' : `${darkMode ? 'text-gray-400 hover:bg-gray-700' : 'text-gray-600 hover:bg-gray-100'}`}`}><Clock className="inline mr-2" size={20} />History</button>
-                <button onClick={() => setActiveTab('squads')} className={`flex-1 py-4 px-4 font-medium transition-all ${activeTab === 'squads' ? 'bg-gradient-to-b from-blue-600 to-blue-700 text-white border-b-2 border-blue-400 shadow-lg' : `${darkMode ? 'text-gray-400 hover:bg-gray-700' : 'text-gray-600 hover:bg-gray-100'}`}`}><Shield className="inline mr-2" size={20} />Squads</button>
+              <div className="flex bg-white border-b border-gray-300 shadow-md">
+                <button onClick={() => setActiveTab('players')} className={`flex-1 py-4 px-4 font-medium transition-all ${activeTab === 'players' ? 'bg-gradient-to-b from-blue-600 to-blue-700 text-white border-b-2 border-blue-400 shadow-lg' : 'text-gray-600 hover:bg-gray-100'}`}><Users className="inline mr-2" size={20} />{t.players}</button>
+                <button onClick={() => setActiveTab('squads')} className={`flex-1 py-4 px-4 font-medium transition-all ${activeTab === 'squads' ? 'bg-gradient-to-b from-blue-600 to-blue-700 text-white border-b-2 border-blue-400 shadow-lg' : 'text-gray-600 hover:bg-gray-100'}`}><Shield className="inline mr-2" size={20} />{t.squads}</button>
               </div>
 
               <div className="p-4">
@@ -404,89 +554,63 @@
                   <div>
                     {deletingPlayerId && (
                       <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4">
-                        <div className={`${darkMode ? 'bg-gradient-to-br from-gray-800 to-gray-900' : 'bg-white'} rounded-lg p-6 max-w-sm w-full border-2 border-red-600 shadow-2xl`}>
-                          <h3 className="text-lg font-bold mb-3 text-red-400">⚠️ Confirm Delete</h3>
-                          <p className={darkMode ? 'text-gray-300 mb-4' : 'text-gray-700 mb-4'}>Delete this player record?</p>
+                        <div className="bg-white rounded-lg p-6 max-w-sm w-full border-2 border-red-600 shadow-2xl">
+                          <h3 className="text-lg font-bold mb-3 text-red-400">⚠️ {t.confirmDelete}</h3>
+                          <p className="text-gray-700 mb-4">{t.deleteQuestion}</p>
                           <div className="flex gap-3">
-                            <button onClick={cancelDelete} className={`flex-1 py-2 ${darkMode ? 'bg-gray-600 hover:bg-gray-700' : 'bg-gray-300 hover:bg-gray-400'} rounded font-medium`}>Cancel</button>
-                            <button onClick={confirmDelete} className="flex-1 py-2 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 rounded font-medium text-white">Delete</button>
+                            <button onClick={cancelDelete} className="flex-1 py-2 bg-gray-300 hover:bg-gray-400 rounded font-medium">{t.cancel}</button>
+                            <button onClick={confirmDelete} className="flex-1 py-2 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 rounded font-medium text-white">{t.delete}</button>
                           </div>
                         </div>
                       </div>
                     )}
 
-                    <div className={`mb-4 p-3 ${darkMode ? 'bg-blue-900/20 border-blue-700' : 'bg-blue-50 border-blue-300'} rounded-lg border`}>
-                      <p className={`text-sm ${darkMode ? 'text-blue-300' : 'text-blue-700'}`}>🌐 <strong>Shared Database:</strong> All players are synced in real-time with everyone using this app!</p>
+                    <div className="mb-4 p-3 bg-blue-50 border-blue-300 rounded-lg border">
+                      <p className="text-sm text-blue-700">🌐 <strong>{t.sharedDb}</strong></p>
                     </div>
 
-                    <div className={`mb-4 p-4 ${darkMode ? 'bg-gradient-to-br from-gray-800 to-gray-850 border-gray-700' : 'bg-white border-gray-300'} rounded-lg border shadow-lg`}>
-                      <h3 className="font-bold mb-3 flex items-center"><Search className={`mr-2 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`} size={20} />Quick Search</h3>
-                      <div className="mb-3"><label className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'} mb-1 block`}>By Player ID</label><div className="flex gap-2"><input type="text" placeholder="Enter Player ID..." value={idSearchTerm} onChange={(e) => setIdSearchTerm(e.target.value)} onKeyPress={(e) => e.key === 'Enter' && searchById()} className={`flex-1 px-4 py-2 ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-900'} border rounded-lg`} /><button onClick={searchById} className="px-6 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg font-medium text-white">Search</button></div></div>
-                      <div className="mb-3"><label className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'} mb-1 block`}>By Alliance</label><div className="flex gap-2"><input type="text" placeholder="Enter Alliance..." value={allianceSearchTerm} onChange={(e) => setAllianceSearchTerm(e.target.value)} onKeyPress={(e) => e.key === 'Enter' && searchByAlliance()} className={`flex-1 px-4 py-2 ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-900'} border rounded-lg`} /><button onClick={searchByAlliance} className="px-6 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg font-medium text-white">Search</button></div></div>
-                      <div><label className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'} mb-1 block`}>By State</label><div className="flex gap-2"><input type="text" placeholder="Enter State..." value={stateSearchTerm} onChange={(e) => setStateSearchTerm(e.target.value)} onKeyPress={(e) => e.key === 'Enter' && searchByState()} className={`flex-1 px-4 py-2 ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-900'} border rounded-lg`} /><button onClick={searchByState} className="px-6 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg font-medium text-white">Search</button></div></div>
+                    <div className="mb-4 p-4 bg-white border-gray-300 rounded-lg border shadow-lg">
+                      <h3 className="font-bold mb-3 flex items-center"><Search className="mr-2 text-blue-600" size={20} />{t.quickSearch}</h3>
+                      <div className="mb-3"><label className="text-sm text-gray-600 mb-1 block">{t.byPlayerId}</label><div className="flex gap-2"><input type="text" placeholder={t.enterPlayerId} value={idSearchTerm} onChange={(e) => setIdSearchTerm(e.target.value)} onKeyPress={(e) => e.key === 'Enter' && searchById()} className="flex-1 px-4 py-2 bg-white border-gray-300 text-gray-900 border rounded-lg" /><button onClick={searchById} className="px-6 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg font-medium text-white">{t.searchBtn}</button></div></div>
+                      <div className="mb-3"><label className="text-sm text-gray-600 mb-1 block">{t.byAlliance}</label><div className="flex gap-2"><input type="text" placeholder={t.enterAlliance} value={allianceSearchTerm} onChange={(e) => setAllianceSearchTerm(e.target.value)} onKeyPress={(e) => e.key === 'Enter' && searchByAlliance()} className="flex-1 px-4 py-2 bg-white border-gray-300 text-gray-900 border rounded-lg" /><button onClick={searchByAlliance} className="px-6 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg font-medium text-white">{t.searchBtn}</button></div></div>
+                      <div><label className="text-sm text-gray-600 mb-1 block">{t.byState}</label><div className="flex gap-2"><input type="text" placeholder={t.enterState} value={stateSearchTerm} onChange={(e) => setStateSearchTerm(e.target.value)} onKeyPress={(e) => e.key === 'Enter' && searchByState()} className="flex-1 px-4 py-2 bg-white border-gray-300 text-gray-900 border rounded-lg" /><button onClick={searchByState} className="px-6 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg font-medium text-white">{t.searchBtn}</button></div></div>
                       
-                      {idSearchResults.length > 0 && (<div className="mt-3 p-3 bg-gradient-to-br from-green-900/40 to-green-800/30 border-2 border-green-600 rounded-lg shadow-lg"><p className="font-bold text-green-400 mb-2 flex items-center">✓ Found {idSearchResults.length} record{idSearchResults.length > 1 ? 's' : ''} for ID: {idSearchTerm}</p>{idSearchResults.map((p, i) => (<div key={p.id} className="text-sm text-gray-300 mb-2"><p className="font-bold">{i + 1}. {p.name}</p>{p.alliance && <p className="ml-3">Alliance: {p.alliance}</p>}{p.state && <p className="ml-3">State: {p.state}</p>}{p.notes && <p className="ml-3">Notes: {p.notes}</p>}<p className="ml-3 text-gray-500 text-xs">Added by: {p.addedBy || 'Unknown'}</p></div>))}{idSearchResults.length > 1 && <p className="text-yellow-400 text-sm mt-2">⚠️ This player changed names {idSearchResults.length} times!</p>}</div>)}
-                      {idSearchTerm && !idSearchResults.length && <div className={`mt-3 p-3 ${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-gray-200 border-gray-300'} border rounded-lg`}><p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} text-sm`}>No player with ID: {idSearchTerm}</p></div>}
-                      {allianceSearchResults.length > 0 && (<div className="mt-3 p-3 bg-gradient-to-br from-purple-900/40 to-purple-800/30 border-2 border-purple-600 rounded-lg shadow-lg"><p className="font-bold text-purple-400 mb-2 flex items-center">👥 Found {allianceSearchResults.length} in "{allianceSearchTerm}"</p>{allianceSearchResults.map((p, i) => (<div key={p.id} className="text-sm text-gray-300 mb-2 pb-2 border-b border-purple-800 last:border-0"><p className="font-bold">{i + 1}. {p.name}</p><p className="ml-3 text-xs">ID: {p.playerId}</p>{p.state && <p className="ml-3 text-xs">State: {p.state}</p>}</div>))}</div>)}
-                      {allianceSearchTerm && !allianceSearchResults.length && <div className={`mt-3 p-3 ${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-gray-200 border-gray-300'} border rounded-lg`}><p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} text-sm`}>No players in alliance: {allianceSearchTerm}</p></div>}
-                      {stateSearchResults.length > 0 && (<div className="mt-3 p-3 bg-gradient-to-br from-orange-900/40 to-orange-800/30 border-2 border-orange-600 rounded-lg shadow-lg"><p className="font-bold text-orange-400 mb-2 flex items-center">📍 Found {stateSearchResults.length} in "{stateSearchTerm}"</p>{stateSearchResults.map((p, i) => (<div key={p.id} className="text-sm text-gray-300 mb-2 pb-2 border-b border-orange-800 last:border-0"><p className="font-bold">{i + 1}. {p.name}</p><p className="ml-3 text-xs">ID: {p.playerId}</p>{p.alliance && <p className="ml-3 text-xs">Alliance: {p.alliance}</p>}</div>))}</div>)}
-                      {stateSearchTerm && !stateSearchResults.length && <div className={`mt-3 p-3 ${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-gray-200 border-gray-300'} border rounded-lg`}><p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} text-sm`}>No players in state: {stateSearchTerm}</p></div>}
+                      {idSearchResults.length > 0 && (<div className="mt-3 p-3 bg-gradient-to-br from-green-900/40 to-green-800/30 border-2 border-green-600 rounded-lg shadow-lg"><p className="font-bold text-green-400 mb-2">✓ {t.found} {idSearchResults.length} {t.recordsForId} {idSearchTerm}</p>{idSearchResults.map((p, i) => (<div key={p.id} className="text-sm text-gray-300 mb-2"><p className="font-bold">{i + 1}. {p.name}</p>{p.alliance && <p className="ml-3">{t.alliance}: {p.alliance}</p>}{p.state && <p className="ml-3">{t.state}: {p.state}</p>}{p.notes && <p className="ml-3">{t.notes}: {p.notes}</p>}</div>))}{idSearchResults.length > 1 && <p className="text-yellow-400 text-sm mt-2">⚠️ {t.nameChanged} {idSearchResults.length} {t.times}</p>}</div>)}
+                      {idSearchTerm && !idSearchResults.length && <div className="mt-3 p-3 bg-gray-200 border-gray-300 border rounded-lg"><p className="text-gray-600 text-sm">{t.noPlayerWithId} {idSearchTerm}</p></div>}
+                      {allianceSearchResults.length > 0 && (<div className="mt-3 p-3 bg-gradient-to-br from-purple-900/40 to-purple-800/30 border-2 border-purple-600 rounded-lg shadow-lg"><p className="font-bold text-purple-400 mb-2">👥 {t.found} {allianceSearchResults.length} {t.inAlliance} "{allianceSearchTerm}"</p>{allianceSearchResults.map((p, i) => (<div key={p.id} className="text-sm text-gray-300 mb-2 pb-2 border-b border-purple-800 last:border-0"><p className="font-bold">{i + 1}. {p.name}</p><p className="ml-3 text-xs">{t.id}: {p.playerId}</p>{p.state && <p className="ml-3 text-xs">{t.state}: {p.state}</p>}</div>))}</div>)}
+                      {allianceSearchTerm && !allianceSearchResults.length && <div className="mt-3 p-3 bg-gray-200 border-gray-300 border rounded-lg"><p className="text-gray-600 text-sm">No players {t.inAlliance}: {allianceSearchTerm}</p></div>}
+                      {stateSearchResults.length > 0 && (<div className="mt-3 p-3 bg-gradient-to-br from-orange-900/40 to-orange-800/30 border-2 border-orange-600 rounded-lg shadow-lg"><p className="font-bold text-orange-400 mb-2">📍 {t.found} {stateSearchResults.length} {t.inState} "{stateSearchTerm}"</p>{stateSearchResults.map((p, i) => (<div key={p.id} className="text-sm text-gray-300 mb-2 pb-2 border-b border-orange-800 last:border-0"><p className="font-bold">{i + 1}. {p.name}</p><p className="ml-3 text-xs">{t.id}: {p.playerId}</p>{p.alliance && <p className="ml-3 text-xs">{t.alliance}: {p.alliance}</p>}</div>))}</div>)}
+                      {stateSearchTerm && !stateSearchResults.length && <div className="mt-3 p-3 bg-gray-200 border-gray-300 border rounded-lg"><p className="text-gray-600 text-sm">No players {t.inState}: {stateSearchTerm}</p></div>}
                     </div>
 
-                    <div className="mb-4"><div className="relative"><Search className={`absolute left-3 top-3 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`} size={20} /><input type="text" placeholder="Search players..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className={`w-full pl-10 pr-4 py-2 ${darkMode ? 'bg-gray-800 border-gray-700 text-white' : 'bg-white border-gray-300 text-gray-900'} border rounded-lg`} /></div></div>
+                    <div className="mb-4"><div className="relative"><Search className="absolute left-3 top-3 text-gray-500" size={20} /><input type="text" placeholder={t.searchPlayers} value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="w-full pl-10 pr-4 py-2 bg-white border-gray-300 text-gray-900 border rounded-lg" /></div></div>
 
-                    <div className="mb-4"><button onClick={exportPlayers} className="w-full py-2 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 rounded-lg font-medium flex items-center justify-center shadow-lg text-white">📥 Export Backup</button></div>
+                    <div className="mb-4"><button onClick={exportPlayers} className="w-full py-2 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 rounded-lg font-medium flex items-center justify-center shadow-lg text-white">📥 {t.exportBackup}</button></div>
 
-                    {!showPlayerForm && <button onClick={() => setShowPlayerForm(true)} className="w-full mb-4 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 rounded-lg font-medium flex items-center justify-center shadow-lg text-white"><Plus size={20} className="mr-2" />Add Player</button>}
+                    {!showPlayerForm && <button onClick={() => setShowPlayerForm(true)} className="w-full mb-4 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 rounded-lg font-medium flex items-center justify-center shadow-lg text-white"><Plus size={20} className="mr-2" />{t.addPlayer}</button>}
 
-                    {showPlayerForm && (<div className={`mb-4 p-4 ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-300'} rounded-lg border`}><div className="flex justify-between items-center mb-3"><h3 className="font-bold">{editingPlayer ? 'Edit Player' : 'Add New Player'}</h3><button onClick={cancelPlayerForm}><X size={20} /></button></div><input type="text" placeholder="Player Name *" value={playerForm.name} onChange={(e) => setPlayerForm({ ...playerForm, name: e.target.value })} className={`w-full mb-2 p-2 ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-900'} border rounded`} /><input type="text" placeholder="Player ID *" value={playerForm.playerId} onChange={(e) => setPlayerForm({ ...playerForm, playerId: e.target.value })} className={`w-full mb-2 p-2 ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-900'} border rounded`} /><select value={playerForm.tag} onChange={(e) => setPlayerForm({ ...playerForm, tag: e.target.value })} className={`w-full mb-2 p-2 ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-900'} border rounded`}><option value="none">No Tag</option><option value="suspicious">⚠️ Suspicious</option><option value="friendly">✓ Friendly</option></select><select value={playerForm.powerLevel} onChange={(e) => setPlayerForm({ ...playerForm, powerLevel: e.target.value })} className={`w-full mb-2 p-2 ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-900'} border rounded`}><option value="">Power Level (Optional)</option>{[...Array(30)].map((_, i) => <option key={i + 1} value={`${i + 1}`}>Level {i + 1}</option>)}{[...Array(10)].map((_, i) => <option key={`fc${i + 1}`} value={`FC${i + 1}`}>FC{i + 1}</option>)}</select><input type="text" placeholder="Alliance" value={playerForm.alliance} onChange={(e) => setPlayerForm({ ...playerForm, alliance: e.target.value })} className={`w-full mb-2 p-2 ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-900'} border rounded`} /><input type="text" placeholder="State" value={playerForm.state} onChange={(e) => setPlayerForm({ ...playerForm, state: e.target.value })} className={`w-full mb-2 p-2 ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-900'} border rounded`} /><textarea placeholder="Notes" value={playerForm.notes} onChange={(e) => setPlayerForm({ ...playerForm, notes: e.target.value })} className={`w-full mb-3 p-2 ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-900'} border rounded h-20`} /><button onClick={addOrUpdatePlayer} className="w-full py-2 bg-green-600 hover:bg-green-700 rounded font-medium text-white">{editingPlayer ? 'Update' : 'Save'} Player</button></div>)}
-
-                    <div className="space-y-4">{!filteredPlayers.length ? <div className={`text-center ${darkMode ? 'text-gray-400' : 'text-gray-600'} py-8`}>No players found</div> : sortedStates.map(state => {const alliances = Object.keys(playersByState[state]).sort((a,b) => a === 'No Alliance' ? 1 : b === 'No Alliance' ? -1 : a.localeCompare(b)); const total = Object.values(playersByState[state]).flat().length; return (<div key={state}><div className={`sticky top-0 ${darkMode ? 'bg-gradient-to-r from-blue-700 via-blue-600 to-blue-700 border-blue-500' : 'bg-gradient-to-r from-blue-500 via-blue-400 to-blue-500 border-blue-300'} px-4 py-3 rounded-lg mb-2 border shadow-lg`}><h3 className="font-bold text-white flex items-center">📍 {state} ({total})</h3></div><div className="space-y-3 ml-2">{alliances.map(alliance => (<div key={`${state}-${alliance}`}><div className={`${darkMode ? 'bg-gradient-to-r from-purple-800 to-purple-700 border-purple-600' : 'bg-gradient-to-r from-purple-600 to-purple-500 border-purple-400'} px-3 py-2 rounded mb-2 border shadow-md`}><h4 className="text-sm font-semibold text-white flex items-center">👥 {alliance} ({playersByState[state][alliance].length})</h4></div><div className="space-y-2 ml-2">{playersByState[state][alliance].map(player => {const dups = findDuplicateIds(player.playerId); const hasDups = dups.length > 1; const isExp = expandedPlayer === player.id; return (<div key={player.id} className={`rounded-lg border shadow-md ${hasDups ? (darkMode ? 'bg-gradient-to-br from-red-900/30 to-red-800/20 border-red-600 shadow-red-900/50' : 'bg-red-50 border-red-400') : (darkMode ? 'bg-gradient-to-br from-gray-800 to-gray-850 border-gray-700 hover:border-gray-600' : 'bg-white border-gray-300 hover:border-gray-400')}`}><div onClick={() => setExpandedPlayer(isExp ? null : player.id)} className={`${compactView ? 'p-2' : 'p-3'} cursor-pointer flex items-center justify-between`}><div className="flex-1"><div className="flex items-center gap-2 flex-wrap">{hasDups && <AlertTriangle size={16} className="text-red-400" />}<span className={`font-bold ${compactView ? 'text-sm' : ''}`}>{player.name}</span>{player.tag && player.tag !== 'none' && <span className={`text-xs px-2 py-0.5 rounded border ${getTagColor(player.tag)}`}>{getTagLabel(player.tag)}</span>}{player.powerLevel && <span className={`text-xs px-2 py-0.5 rounded ${darkMode ? 'bg-blue-900/40 text-blue-400' : 'bg-blue-100 text-blue-700'}`}>{player.powerLevel}</span>}</div><p className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>ID: {player.playerId}</p><p className={`text-xs ${darkMode ? 'text-gray-500' : 'text-gray-500'}`}>Added by: {player.addedBy || 'Unknown'}</p></div>{isExp ? <ChevronUp size={20} /> : <ChevronDown size={20} />}</div>{isExp && (<div className={`px-3 pb-3 border-t ${darkMode ? 'border-gray-700' : 'border-gray-300'}`}>{player.alliance && <p className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-700'} mt-2`}><span className={darkMode ? 'text-gray-500' : 'text-gray-600'}>Alliance:</span> {player.alliance}</p>}{player.state && <p className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}><span className={darkMode ? 'text-gray-500' : 'text-gray-600'}>State:</span> {player.state}</p>}{player.notes && <p className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-700'} mt-2`}><span className={darkMode ? 'text-gray-500' : 'text-gray-600'}>Notes:</span> {player.notes}</p>}{player.lastEditedBy && <p className={`text-xs ${darkMode ? 'text-gray-500' : 'text-gray-500'} mt-2`}>Last edited by: {player.lastEditedBy}</p>}{hasDups && <div className={`mt-3 pt-3 border-t ${darkMode ? 'border-red-600' : 'border-red-400'}`}><p className="text-sm font-bold text-red-400 mb-2">Previous identities:</p>{dups.filter(d => d.id !== player.id).map(d => <div key={d.id} className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-700'} ml-2 mb-1`}>• {d.name} {d.alliance && `[${d.alliance}]`} {d.state && `- ${d.state}`}</div>)}</div>}<div className="flex gap-2 mt-3"><button onClick={(e) => { e.stopPropagation(); editPlayer(player); }} className="flex-1 py-2 bg-blue-600 hover:bg-blue-700 rounded text-sm font-medium flex items-center justify-center text-white"><Edit2 size={16} className="mr-1" />Edit</button><button onClick={(e) => deletePlayer(player.id, e)} className="flex-1 py-2 bg-red-600 hover:bg-red-700 rounded text-sm font-medium flex items-center justify-center text-white"><Trash2 size={16} className="mr-1" />Delete</button></div></div>)}</div>);})}</div></div>))}</div></div>);})}</div>
+                    {showPlayerForm && (<div className="mb-4 p-4 bg-white border-gray-300 rounded-lg border"><div className="flex justify-between items-center mb-3"><h3 className="font-bold">{editingPlayer ? t.editPlayer : t.addNewPlayer}</h3><button onClick={cancelPlayerForm}><X size={20} /></button></div><input type="text" placeholder={t.playerName + ' *'} value={playerForm.name} onChange={(e) => setPlayerForm({ ...playerForm, name: e.target.value })} className="w-full mb-2 p-2 bg-white border-gray-300 text-gray-900 border rounded" /><input type="text" placeholder={t.playerId + ' *'} value={playerForm.playerId} onChange={(e) => setPlayerForm({ ...playerForm, playerId: e.target.value })} className="w-full mb-2 p-2 bg-white border-gray-300 text-gray-900 border rounded" /><select value={playerForm.tag} onChange={(e) => setPlayerForm({ ...playerForm, tag: e.target.value })} className="w-full mb-2 p-2 bg-white border-gray-300 text-gray-900 border rounded"><option value="none">{t.noTag}</option><option value="suspicious">⚠️ {t.suspicious}</option><option value="friendly">✓ {t.friendly}</option></select><select value={playerForm.powerLevel} onChange={(e) => setPlayerForm({ ...playerForm, powerLevel: e.target.value })} className="w-full mb-2 p-2 bg-white border-gray-300 text-gray-900 border rounded"><option value="">{t.powerLevel}</option>{[...Array(30)].map((_, i) => <option key={i + 1} value={`${i + 1}`}>Level {i + 1}</option>)}{[...Array(10)].map((_, i) => <option key={`fc${i + 1}`} value={`FC${i + 1}`}>FC{i + 1}</option>)}</select><input type="text" placeholder={t.alliance} value={playerForm.alliance} onChange={(e) => setPlayerForm({ ...playerForm, alliance: e.target.value })} className="w-full mb-2 p-2 bg-white border-gray-300 text-gray-900 border rounded" /><input type="text" placeholder={t.state} value={playerForm.state} onChange={(e) => setPlayerForm({ ...playerForm, state: e.target.value })} className="w-full mb-2 p-2 bg-white border-gray-300 text-gray-900 border rounded" /><textarea placeholder={t.notes} value={playerForm.notes} onChange={(e) => setPlayerForm({ ...playerForm, notes: e.target.value })} className="w-full mb-3 p-2 bg-white border-gray-300 text-gray-900 border rounded h-20" /><button onClick={addOrUpdatePlayer} className="w-full py-2 bg-green-600 hover:bg-green-700 rounded font-medium text-white">{editingPlayer ? t.updatePlayer : t.savePlayer}</button></div>)}
+                      <div className="space-y-4">{!filteredPlayers.length ? <div className="text-center text-gray-600 py-8">{t.noPlayersFound}</div> : sortedStates.map(state => {const alliances = Object.keys(playersByState[state]).sort((a,b) => a === 'No Alliance' ? 1 : b === 'No Alliance' ? -1 : a.localeCompare(b)); const total = Object.values(playersByState[state]).flat().length; const isStateExpanded = expandedStates[state]; return (<div key={state}><div onClick={() => toggleState(state)} className="cursor-pointer bg-gradient-to-r from-blue-500 via-blue-400 to-blue-500 border-blue-300 px-4 py-3 rounded-lg mb-2 border shadow-lg flex justify-between items-center"><h3 className="font-bold text-white flex items-center">📍 {state} ({total})</h3>{isStateExpanded ? <ChevronUp size={20} className="text-white" /> : <ChevronDown size={20} className="text-white" />}</div>{isStateExpanded && (<div className="space-y-3 ml-2">{alliances.map(alliance => {const stateAllianceKey = `${state}-${alliance}`; const isAllianceExpanded = expandedAlliances[stateAllianceKey]; return (<div key={stateAllianceKey}><div onClick={() => toggleAlliance(stateAllianceKey)} className="cursor-pointer bg-gradient-to-r from-purple-600 to-purple-500 border-purple-400 px-3 py-2 rounded mb-2 border shadow-md flex justify-between items-center"><h4 className="text-sm font-semibold text-white flex items-center">👥 {alliance} ({playersByState[state][alliance].length})</h4>{isAllianceExpanded ? <ChevronUp size={16} className="text-white" /> : <ChevronDown size={16} className="text-white" />}</div>{isAllianceExpanded && (<div className="space-y-2 ml-2">{playersByState[state][alliance].map(player => {const dups = findDuplicateIds(player.playerId); const hasDups = dups.length > 1; const isExp = expandedPlayer === player.id; return (<div key={player.id} className={`rounded-lg border shadow-md ${hasDups ? 'bg-red-50 border-red-400' : 'bg-white border-gray-300 hover:border-gray-400'}`}><div onClick={() => setExpandedPlayer(isExp ? null : player.id)} className="p-3 cursor-pointer flex items-center justify-between"><div className="flex-1"><div className="flex items-center gap-2 flex-wrap">{hasDups && <AlertTriangle size={16} className="text-red-400" />}<span className="font-bold">{player.name}</span>{player.tag && player.tag !== 'none' && <span className={`text-xs px-2 py-0.5 rounded border ${getTagColor(player.tag)}`}>{getTagLabel(player.tag)}</span>}{player.powerLevel && <span className="text-xs px-2 py-0.5 rounded bg-blue-100 text-blue-700">{player.powerLevel}</span>}</div><p className="text-xs text-gray-600">{t.id}: {player.playerId}</p></div>{isExp ? <ChevronUp size={20} /> : <ChevronDown size={20} />}</div>{isExp && (<div className="px-3 pb-3 border-t border-gray-300">{player.alliance && <p className="text-sm text-gray-700 mt-2"><span className="text-gray-600">{t.alliance}:</span> {player.alliance}</p>}{player.state && <p className="text-sm text-gray-700"><span className="text-gray-600">{t.state}:</span> {player.state}</p>}{player.notes && <p className="text-sm text-gray-700 mt-2"><span className="text-gray-600">{t.notes}:</span> {player.notes}</p>}{hasDups && <div className="mt-3 pt-3 border-t border-red-400"><p className="text-sm font-bold text-red-400 mb-2">{t.previousIdentities}</p>{dups.filter(d => d.id !== player.id).map(d => <div key={d.id} className="text-sm text-gray-700 ml-2 mb-1">• {d.name} {d.alliance && `[${d.alliance}]`} {d.state && `- ${d.state}`}</div>)}</div>}<div className="flex gap-2 mt-3"><button onClick={(e) => { e.stopPropagation(); editPlayer(player); }} className="flex-1 py-2 bg-blue-600 hover:bg-blue-700 rounded text-sm font-medium flex items-center justify-center text-white"><Edit2 size={16} className="mr-1" />{t.edit}</button><button onClick={(e) => deletePlayer(player.id, e)} className="flex-1 py-2 bg-red-600 hover:bg-red-700 rounded text-sm font-medium flex items-center justify-center text-white"><Trash2 size={16} className="mr-1" />{t.delete}</button></div></div>)}</div>);})}</div>)}</div>);})}</div>)}</div>);})}</div>
                   </div>
-                ) : activeTab === 'history' ? (
+                ) : (
                   <div>
-                    <div className={`mb-4 p-3 ${darkMode ? 'bg-blue-900/20 border-blue-700' : 'bg-blue-50 border-blue-300'} rounded-lg border`}>
-                      <p className={`text-sm ${darkMode ? 'text-blue-300' : 'text-blue-700'}`}>📜 Recent changes to the player database</p>
-                    </div>
-                    {changeHistory.length === 0 ? (
-                      <div className={`text-center ${darkMode ? 'text-gray-400' : 'text-gray-600'} py-8`}>No changes yet</div>
-                    ) : (
-                      <div className="space-y-2">
-                        {changeHistory.map(change => (
-                          <div key={change.id} className={`p-3 ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-300'} rounded-lg border`}>
-                            <div className="flex items-start gap-2">
-                              {change.action === 'added' && <Plus size={16} className="text-green-400 mt-1" />}
-                              {change.action === 'edited' && <Edit2 size={16} className="text-blue-400 mt-1" />}
-                              {change.action === 'deleted' && <Trash2 size={16} className="text-red-400 mt-1" />}
-                              <div className="flex-1">
-                                <p className="text-sm"><strong>{change.username}</strong> {change.action} <strong>{change.playerName}</strong></p>
-                                <p className={`text-xs ${darkMode ? 'text-gray-500' : 'text-gray-600'}`}>ID: {change.playerId}</p>
-                                <p className={`text-xs ${darkMode ? 'text-gray-500' : 'text-gray-600'}`}>{formatTimestamp(change.timestamp)}</p>
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                ) : (<div>
-                    {showClearConfirm && (<div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4"><div className={`${darkMode ? 'bg-gradient-to-br from-gray-800 to-gray-900' : 'bg-white'} rounded-lg p-6 max-w-sm w-full border-2 border-red-600 shadow-2xl`}><h3 className="text-lg font-bold mb-3 text-red-400">⚠️ Clear All?</h3><p className={`${darkMode ? 'text-gray-300' : 'text-gray-700'} mb-4`}>Reset all troop amounts, squad sizes, and compositions?</p><div className="flex gap-3"><button onClick={() => setShowClearConfirm(false)} className={`flex-1 py-2 ${darkMode ? 'bg-gray-600 hover:bg-gray-700' : 'bg-gray-300 hover:bg-gray-400'} rounded font-medium`}>Cancel</button><button onClick={clearAllSquads} className="flex-1 py-2 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 rounded font-medium text-white">Clear All</button></div></div></div>)}
+                    {showClearConfirm && (<div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4"><div className="bg-white rounded-lg p-6 max-w-sm w-full border-2 border-red-600 shadow-2xl"><h3 className="text-lg font-bold mb-3 text-red-400">⚠️ {t.clearAll}?</h3><p className="text-gray-700 mb-4">{t.clearAllQuestion}</p><div className="flex gap-3"><button onClick={() => setShowClearConfirm(false)} className="flex-1 py-2 bg-gray-300 hover:bg-gray-400 rounded font-medium">{t.cancel}</button><button onClick={clearAllSquads} className="flex-1 py-2 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 rounded font-medium text-white">{t.clearAll}</button></div></div></div>)}
                     
-                    <div className="mb-4"><button onClick={() => setShowClearConfirm(true)} className="w-full py-2 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 rounded-lg font-medium flex items-center justify-center shadow-lg text-white"><X size={20} className="mr-2" />Clear All</button></div>
+                    <div className="mb-4"><button onClick={() => setShowClearConfirm(true)} className="w-full py-2 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 rounded-lg font-medium flex items-center justify-center shadow-lg text-white"><X size={20} className="mr-2" />{t.clearAll}</button></div>
 
-                    <div className={`mb-4 p-4 ${darkMode ? 'bg-gradient-to-br from-gray-800 to-gray-850 border-gray-700' : 'bg-white border-gray-300'} rounded-lg border shadow-lg`}><h3 className="font-bold mb-3 flex items-center"><Users className={`mr-2 ${darkMode ? 'text-green-400' : 'text-green-600'}`} size={20} />Total Available Troops</h3><input type="number" placeholder="Infantry" value={totalTroops.infantry} onChange={(e) => setTotalTroops({ ...totalTroops, infantry: e.target.value })} className={`w-full mb-2 p-2 ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-900'} border rounded`} /><input type="number" placeholder="Lancer" value={totalTroops.lancer} onChange={(e) => setTotalTroops({ ...totalTroops, lancer: e.target.value })} className={`w-full mb-2 p-2 ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-900'} border rounded`} /><input type="number" placeholder="Marksmen" value={totalTroops.marksmen} onChange={(e) => setTotalTroops({ ...totalTroops, marksmen: e.target.value })} className={`w-full p-2 ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-900'} border rounded`} /></div>
+                    <div className="mb-4 p-4 bg-white border-gray-300 rounded-lg border shadow-lg"><h3 className="font-bold mb-3 flex items-center"><Users className="mr-2 text-green-600" size={20} />{t.totalTroops}</h3><input type="number" placeholder={t.infantry} value={totalTroops.infantry} onChange={(e) => setTotalTroops({ ...totalTroops, infantry: e.target.value })} className="w-full mb-2 p-2 bg-white border-gray-300 text-gray-900 border rounded" /><input type="number" placeholder={t.lancer} value={totalTroops.lancer} onChange={(e) => setTotalTroops({ ...totalTroops, lancer: e.target.value })} className="w-full mb-2 p-2 bg-white border-gray-300 text-gray-900 border rounded" /><input type="number" placeholder={t.marksmen} value={totalTroops.marksmen} onChange={(e) => setTotalTroops({ ...totalTroops, marksmen: e.target.value })} className="w-full p-2 bg-white border-gray-300 text-gray-900 border rounded" /></div>
 
-                    <div className={`mb-4 p-4 ${darkMode ? 'bg-gradient-to-br from-gray-800 to-gray-850 border-gray-700' : 'bg-white border-gray-300'} rounded-lg border shadow-lg`}><div className="flex justify-between items-center mb-3"><h3 className="font-bold flex items-center"><Shield className={`mr-2 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`} size={20} />Squad Sizes</h3><button onClick={addSquadSize} className="px-3 py-1 bg-blue-600 hover:bg-blue-700 rounded text-sm font-medium text-white"><Plus size={16} className="inline mr-1" />Add Squad</button></div><p className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-600'} mb-3`}>Enter total troop count per squad</p><div className="space-y-2">{squadSizes.map((sz, i) => (<div key={i} className="flex items-center gap-2"><span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'} w-16`}>Squad {i + 1}:</span><input type="number" placeholder="Troop count" value={sz} onChange={(e) => updateSquadSize(i, e.target.value)} className={`flex-1 p-2 ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-900'} border rounded`} />{squadSizes.length > 1 && <button onClick={() => removeSquadSize(i)} className="p-2 text-red-400 hover:text-red-300"><Trash2 size={18} /></button>}</div>))}</div></div>
+                    <div className="mb-4 p-4 bg-white border-gray-300 rounded-lg border shadow-lg"><div className="flex justify-between items-center mb-3"><h3 className="font-bold flex items-center"><Shield className="mr-2 text-blue-600" size={20} />{t.squadSizes}</h3><button onClick={addSquadSize} className="px-3 py-1 bg-blue-600 hover:bg-blue-700 rounded text-sm font-medium text-white"><Plus size={16} className="inline mr-1" />{t.addSquad}</button></div><p className="text-xs text-gray-600 mb-3">{t.enterTroopCount}</p><div className="space-y-2">{squadSizes.map((sz, i) => (<div key={i} className="flex items-center gap-2"><span className="text-sm text-gray-600 w-16">{t.squad} {i + 1}:</span><input type="number" placeholder={t.troopCount} value={sz} onChange={(e) => updateSquadSize(i, e.target.value)} className="flex-1 p-2 bg-white border-gray-300 text-gray-900 border rounded" />{squadSizes.length > 1 && <button onClick={() => removeSquadSize(i)} className="p-2 text-red-400 hover:text-red-300"><Trash2 size={18} /></button>}</div>))}</div></div>
 
-                    <div className={`mb-4 p-4 ${darkMode ? 'bg-gradient-to-br from-gray-800 to-gray-850 border-gray-700' : 'bg-white border-gray-300'} rounded-lg border shadow-lg`}><h3 className="font-bold mb-3">Squad Composition (%)</h3>{savedSquadPresets.length > 0 && (<div className={`mb-3 p-3 ${darkMode ? 'bg-blue-900/20 border-blue-700' : 'bg-blue-50 border-blue-300'} rounded-lg border`}><p className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-600'} mb-2`}>💾 Saved Presets:</p><div className="space-y-1">{savedSquadPresets.map(p => (<div key={p.id} className="flex items-center justify-between gap-2"><button onClick={() => loadPreset(p)} className="flex-1 text-left px-2 py-1 bg-blue-700 hover:bg-blue-600 rounded text-sm text-white">{p.name} ({p.composition.infantry}% / {p.composition.lancer}% / {p.composition.marksmen}%)</button><button onClick={() => deletePreset(p.id)} className="p-1 text-red-400 hover:text-red-300"><Trash2 size={16} /></button></div>))}</div></div>)}<div className={`mb-3 p-3 ${darkMode ? 'bg-gradient-to-r from-green-900/30 to-green-800/20 border-green-700' : 'bg-green-50 border-green-300'} rounded-lg border`}><p className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-600'} mb-2`}>⚡ Use all of a specific troop type:</p><div className="flex gap-2"><button onClick={() => suggestRatioToUseAll('infantry')} className="flex-1 py-2 bg-green-600 hover:bg-green-700 rounded text-xs font-medium text-white">Use All Infantry</button><button onClick={() => suggestRatioToUseAll('lancer')} className="flex-1 py-2 bg-green-600 hover:bg-green-700 rounded text-xs font-medium text-white">Use All Lancer</button><button onClick={() => suggestRatioToUseAll('marksmen')} className="flex-1 py-2 bg-green-600 hover:bg-green-700 rounded text-xs font-medium text-white">Use All Marksmen</button></div></div><div className="space-y-2"><div className="flex items-center gap-2"><label className={`w-24 text-sm ${darkMode ? '' : 'text-gray-700'}`}>Infantry:</label><input type="number" value={squadComposition.infantry} onChange={(e) => setSquadComposition({ ...squadComposition, infantry: e.target.value })} className={`flex-1 p-2 ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-900'} border rounded`} /><span className={darkMode ? 'text-gray-400' : 'text-gray-600'}>%</span></div><div className="flex items-center gap-2"><label className={`w-24 text-sm ${darkMode ? '' : 'text-gray-700'}`}>Lancer:</label><input type="number" value={squadComposition.lancer} onChange={(e) => setSquadComposition({ ...squadComposition, lancer: e.target.value })} className={`flex-1 p-2 ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-900'} border rounded`} /><span className={darkMode ? 'text-gray-400' : 'text-gray-600'}>%</span></div><div className="flex items-center gap-2"><label className={`w-24 text-sm ${darkMode ? '' : 'text-gray-700'}`}>Marksmen:</label><input type="number" value={squadComposition.marksmen} onChange={(e) => setSquadComposition({ ...squadComposition, marksmen: e.target.value })} className={`flex-1 p-2 ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-900'} border rounded`} /><span className={darkMode ? 'text-gray-400' : 'text-gray-600'}>%</span></div></div><div className={`mt-3 text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Total: {(parseFloat(squadComposition.infantry) || 0) + (parseFloat(squadComposition.lancer) || 0) + (parseFloat(squadComposition.marksmen) || 0)}%</div><div className={`mt-3 pt-3 border-t ${darkMode ? 'border-gray-700' : 'border-gray-300'}`}><p className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-600'} mb-2`}>💾 Save current composition:</p><div className="flex gap-2"><input type="text" placeholder="Preset name (e.g. 'Defense')" value={presetName} onChange={(e) => setPresetName(e.target.value)} className={`flex-1 p-2 ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-900'} border rounded text-sm`} /><button onClick={savePreset} className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded font-medium text-sm text-white">Save</button></div></div></div>
+                    <div className="mb-4 p-4 bg-white border-gray-300 rounded-lg border shadow-lg"><h3 className="font-bold mb-3">{t.squadComposition}</h3>{savedSquadPresets.length > 0 && (<div className="mb-3 p-3 bg-blue-50 border-blue-300 rounded-lg border"><p className="text-xs text-gray-600 mb-2">💾 {t.savedPresets}</p><div className="space-y-1">{savedSquadPresets.map(p => (<div key={p.id} className="flex items-center justify-between gap-2"><button onClick={() => loadPreset(p)} className="flex-1 text-left px-2 py-1 bg-blue-700 hover:bg-blue-600 rounded text-sm text-white">{p.name} ({p.composition.infantry}% / {p.composition.lancer}% / {p.composition.marksmen}%)</button><button onClick={() => deletePreset(p.id)} className="p-1 text-red-400 hover:text-red-300"><Trash2 size={16} /></button></div>))}</div></div>)}<div className="mb-3 p-3 bg-green-50 border-green-300 rounded-lg border"><p className="text-xs text-gray-600 mb-2">⚡ {t.useAll}</p><div className="flex gap-2"><button onClick={() => suggestRatioToUseAll('infantry')} className="flex-1 py-2 bg-green-600 hover:bg-green-700 rounded text-xs font-medium text-white">{t.useAllInfantry}</button><button onClick={() => suggestRatioToUseAll('lancer')} className="flex-1 py-2 bg-green-600 hover:bg-green-700 rounded text-xs font-medium text-white">{t.useAllLancer}</button><button onClick={() => suggestRatioToUseAll('marksmen')} className="flex-1 py-2 bg-green-600 hover:bg-green-700 rounded text-xs font-medium text-white">{t.useAllMarksmen}</button></div></div><div className="space-y-2"><div className="flex items-center gap-2"><label className="w-24 text-sm text-gray-700">{t.infantry}:</label><input type="number" value={squadComposition.infantry} onChange={(e) => setSquadComposition({ ...squadComposition, infantry: e.target.value })} className="flex-1 p-2 bg-white border-gray-300 text-gray-900 border rounded" /><span className="text-gray-600">%</span></div><div className="flex items-center gap-2"><label className="w-24 text-sm text-gray-700">{t.lancer}:</label><input type="number" value={squadComposition.lancer} onChange={(e) => setSquadComposition({ ...squadComposition, lancer: e.target.value })} className="flex-1 p-2 bg-white border-gray-300 text-gray-900 border rounded" /><span className="text-gray-600">%</span></div><div className="flex items-center gap-2"><label className="w-24 text-sm text-gray-700">{t.marksmen}:</label><input type="number" value={squadComposition.marksmen} onChange={(e) => setSquadComposition({ ...squadComposition, marksmen: e.target.value })} className="flex-1 p-2 bg-white border-gray-300 text-gray-900 border rounded" /><span className="text-gray-600">%</span></div></div><div className="mt-3 text-sm text-gray-600">{t.total}: {(parseFloat(squadComposition.infantry) || 0) + (parseFloat(squadComposition.lancer) || 0) + (parseFloat(squadComposition.marksmen) || 0)}%</div><div className="mt-3 pt-3 border-t border-gray-300"><p className="text-xs text-gray-600 mb-2">💾 {t.saveComposition}</p><div className="flex gap-2"><input type="text" placeholder={t.presetName} value={presetName} onChange={(e) => setPresetName(e.target.value)} className="flex-1 p-2 bg-white border-gray-300 text-gray-900 border rounded text-sm" /><button onClick={savePreset} className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded font-medium text-sm text-white">{t.save}</button></div></div></div>
 
-                    <div className="mb-4"><button onClick={() => setManualSquadMode(!manualSquadMode)} className="w-full py-3 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 rounded-lg font-medium flex items-center justify-center shadow-lg text-white">{manualSquadMode ? '👁️ Hide' : '🔧'} Manual Squad Builder</button></div>
-                    {manualSquadMode && (<div className={`mb-4 p-4 ${darkMode ? 'bg-gradient-to-br from-purple-900/30 to-purple-800/20 border-purple-600' : 'bg-purple-50 border-purple-400'} rounded-lg border-2 shadow-xl`}><h3 className="font-bold mb-3 text-purple-400 flex items-center">🔧 Manual Squad Builder</h3><p className={`text-xs ${darkMode ? 'text-gray-400' : 'text-purple-700'} mb-3`}>Experiment with troop amounts and see ratios</p><div className="space-y-2 mb-3"><input type="number" placeholder="Infantry amount" value={manualSquad.infantry} onChange={(e) => setManualSquad({ ...manualSquad, infantry: e.target.value })} className={`w-full p-2 ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-purple-300 text-gray-900'} border rounded`} /><input type="number" placeholder="Lancer amount" value={manualSquad.lancer} onChange={(e) => setManualSquad({ ...manualSquad, lancer: e.target.value })} className={`w-full p-2 ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-purple-300 text-gray-900'} border rounded`} /><input type="number" placeholder="Marksmen amount" value={manualSquad.marksmen} onChange={(e) => setManualSquad({ ...manualSquad, marksmen: e.target.value })} className={`w-full p-2 ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-purple-300 text-gray-900'} border rounded`} /></div>{(() => {const r = calcManualRatios(); return r.total > 0 ? (<div className={`p-3 ${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-lg mb-3`}><p className="text-sm font-bold mb-2">Resulting Ratios:</p><div className="space-y-1 text-sm"><div className="flex justify-between"><span>Infantry:</span><span className={`font-bold ${darkMode ? 'text-blue-400' : 'text-blue-600'}`}>{r.infantry}%</span></div><div className="flex justify-between"><span>Lancer:</span><span className={`font-bold ${darkMode ? 'text-blue-400' : 'text-blue-600'}`}>{r.lancer}%</span></div><div className="flex justify-between"><span>Marksmen:</span><span className={`font-bold ${darkMode ? 'text-blue-400' : 'text-blue-600'}`}>{r.marksmen}%</span></div><div className={`flex justify-between border-t ${darkMode ? 'border-gray-700' : 'border-gray-300'} pt-1 mt-1`}><span>Total:</span><span className="font-bold">{r.total.toLocaleString()}</span></div></div></div>) : null;})()}<button onClick={applyManualRatios} className="w-full py-2 bg-purple-600 hover:bg-purple-700 rounded font-medium text-white">Apply These Ratios</button></div>)}
+                    <div className="mb-4"><button onClick={() => setManualSquadMode(!manualSquadMode)} className="w-full py-3 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 rounded-lg font-medium flex items-center justify-center shadow-lg text-white">{manualSquadMode ? `👁️ ${t.hide}` : '🔧'} {t.manualBuilder}</button></div>
+                    {manualSquadMode && (<div className="mb-4 p-4 bg-purple-50 border-purple-400 rounded-lg border-2 shadow-xl"><h3 className="font-bold mb-3 text-purple-600 flex items-center">🔧 {t.manualBuilder}</h3><p className="text-xs text-purple-700 mb-3">{t.experimentTroops}</p><div className="space-y-2 mb-3"><input type="number" placeholder={t.infantryAmount} value={manualSquad.infantry} onChange={(e) => setManualSquad({ ...manualSquad, infantry: e.target.value })} className="w-full p-2 bg-white border-purple-300 text-gray-900 border rounded" /><input type="number" placeholder={t.lancerAmount} value={manualSquad.lancer} onChange={(e) => setManualSquad({ ...manualSquad, lancer: e.target.value })} className="w-full p-2 bg-white border-purple-300 text-gray-900 border rounded" /><input type="number" placeholder={t.marksmenAmount} value={manualSquad.marksmen} onChange={(e) => setManualSquad({ ...manualSquad, marksmen: e.target.value })} className="w-full p-2 bg-white border-purple-300 text-gray-900 border rounded" /></div>{(() => {const r = calcManualRatios(); return r.total > 0 ? (<div className="p-3 bg-white rounded-lg mb-3"><p className="text-sm font-bold mb-2">{t.resultingRatios}</p><div className="space-y-1 text-sm"><div className="flex justify-between"><span>{t.infantry}:</span><span className="font-bold text-blue-600">{r.infantry}%</span></div><div className="flex justify-between"><span>{t.lancer}:</span><span className="font-bold text-blue-600">{r.lancer}%</span></div><div className="flex justify-between"><span>{t.marksmen}:</span><span className="font-bold text-blue-600">{r.marksmen}%</span></div><div className="flex justify-between border-t border-gray-300 pt-1 mt-1"><span>{t.total}:</span><span className="font-bold">{r.total.toLocaleString()}</span></div></div></div>) : null;})()}<button onClick={applyManualRatios} className="w-full py-2 bg-purple-600 hover:bg-purple-700 rounded font-medium text-white">{t.applyRatios}</button></div>)}
 
-                    {errorMessage && (<div className="mb-4 p-4 bg-gradient-to-br from-red-900/40 to-red-800/30 border-2 border-red-600 rounded-lg shadow-lg"><p className="text-red-400 font-bold mb-2 flex items-center">⚠️ Error:</p><p className="text-sm text-red-300 whitespace-pre-line">{errorMessage}</p></div>)}
-                    <button onClick={calculateSquads} className="w-full mb-4 py-4 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 rounded-lg font-bold text-lg shadow-xl text-white">⚔️ Calculate Squads</button>
+                    {errorMessage && (<div className="mb-4 p-4 bg-gradient-to-br from-red-100 to-red-50 border-2 border-red-600 rounded-lg shadow-lg"><p className="text-red-600 font-bold mb-2">⚠️ {t.error}</p><p className="text-sm text-red-700 whitespace-pre-line">{errorMessage}</p></div>)}
+                    <button onClick={calculateSquads} className="w-full mb-4 py-4 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 rounded-lg font-bold text-lg shadow-xl text-white">⚔️ {t.calculateSquads}</button>
 
-                    {calculatedSquads.length > 0 && (<div><div className="flex justify-between items-center mb-3"><h3 className="font-bold text-lg">Calculated Squads</h3><button onClick={() => setCalculatedSquads([])} className="text-sm text-red-400 hover:text-red-300">Clear</button></div><div className="mb-4 p-4 bg-gradient-to-br from-blue-900/40 to-blue-800/30 border-2 border-blue-600 rounded-lg shadow-lg"><p className="text-sm font-bold mb-2 text-blue-400 flex items-center">📊 Total Usage:</p><p className={`text-xs ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>Infantry: {calculatedSquads.reduce((s, sq) => s + sq.infantry, 0).toLocaleString()} / {totalTroops.infantry}</p><p className={`text-xs ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>Lancer: {calculatedSquads.reduce((s, sq) => s + sq.lancer, 0).toLocaleString()} / {totalTroops.lancer}</p><p className={`text-xs ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>Marksmen: {calculatedSquads.reduce((s, sq) => s + sq.marksmen, 0).toLocaleString()} / {totalTroops.marksmen}</p></div><div className="space-y-2">{calculatedSquads.map(sq => (<div key={sq.id} className={`p-4 ${darkMode ? 'bg-gradient-to-br from-gray-800 to-gray-850 border-gray-700' : 'bg-white border-gray-300'} rounded-lg border shadow-md`}><h4 className={`font-bold mb-2 flex items-center ${darkMode ? 'text-blue-400' : 'text-blue-600'}`}>⚔️ Squad {sq.id}</h4><div className="space-y-1 text-sm"><div className="flex justify-between"><span className={darkMode ? 'text-gray-400' : 'text-gray-600'}>Infantry:</span><span>{sq.infantry.toLocaleString()} ({squadComposition.infantry}%)</span></div><div className="flex justify-between"><span className={darkMode ? 'text-gray-400' : 'text-gray-600'}>Lancer:</span><span>{sq.lancer.toLocaleString()} ({squadComposition.lancer}%)</span></div><div className="flex justify-between"><span className={darkMode ? 'text-gray-400' : 'text-gray-600'}>Marksmen:</span><span>{sq.marksmen.toLocaleString()} ({squadComposition.marksmen}%)</span></div><div className={`flex justify-between border-t ${darkMode ? 'border-gray-700' : 'border-gray-300'} pt-1 mt-1 font-bold`}><span>Total:</span><span>{sq.total.toLocaleString()}</span></div></div></div>))}</div></div>)}
+                    {calculatedSquads.length > 0 && (<div><div className="flex justify-between items-center mb-3"><h3 className="font-bold text-lg">{t.calculatedSquads}</h3><button onClick={() => setCalculatedSquads([])} className="text-sm text-red-600 hover:text-red-700">{t.clear}</button></div><div className="mb-4 p-4 bg-gradient-to-br from-blue-100 to-blue-50 border-2 border-blue-600 rounded-lg shadow-lg"><p className="text-sm font-bold mb-2 text-blue-700">📊 {t.totalUsage}</p><p className="text-xs text-gray-700">{t.infantry}: {calculatedSquads.reduce((s, sq) => s + sq.infantry, 0).toLocaleString()} / {totalTroops.infantry}</p><p className="text-xs text-gray-700">{t.lancer}: {calculatedSquads.reduce((s, sq) => s + sq.lancer, 0).toLocaleString()} / {totalTroops.lancer}</p><p className="text-xs text-gray-700">{t.marksmen}: {calculatedSquads.reduce((s, sq) => s + sq.marksmen, 0).toLocaleString()} / {totalTroops.marksmen}</p></div><div className="space-y-2">{calculatedSquads.map(sq => (<div key={sq.id} className="p-4 bg-white border-gray-300 rounded-lg border shadow-md"><h4 className="font-bold mb-2 text-blue-600">⚔️ {t.squad} {sq.id}</h4><div className="space-y-1 text-sm"><div className="flex justify-between"><span className="text-gray-600">{t.infantry}:</span><span>{sq.infantry.toLocaleString()} ({squadComposition.infantry}%)</span></div><div className="flex justify-between"><span className="text-gray-600">{t.lancer}:</span><span>{sq.lancer.toLocaleString()} ({squadComposition.lancer}%)</span></div><div className="flex justify-between"><span className="text-gray-600">{t.marksmen}:</span><span>{sq.marksmen.toLocaleString()} ({squadComposition.marksmen}%)</span></div><div className="flex justify-between border-t border-gray-300 pt-1 mt-1 font-bold"><span>{t.total}:</span><span>{sq.total.toLocaleString()}</span></div></div></div>))}</div></div>)}
                   </div>
                 )}
               </div>
